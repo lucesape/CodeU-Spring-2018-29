@@ -66,7 +66,7 @@ public class AdminServlet extends HttpServlet {
    * for use by the test framework or the servlet's init() function.
    */
   void setConversationStore(ConversationStore conversationStore) {
-    this.conversationStore = conversationStore;
+    AdminServlet.conversationStore = conversationStore;
   }
 
   /**
@@ -74,7 +74,7 @@ public class AdminServlet extends HttpServlet {
    * use by the test framework or the servlet's init() function.
    */
   void setMessageStore(MessageStore messageStore) {
-    this.messageStore = messageStore;
+    AdminServlet.messageStore = messageStore;
   }
 
   /**
@@ -82,7 +82,7 @@ public class AdminServlet extends HttpServlet {
    * by the test framework or the servlet's init() function.
    */
   void setUserStore(UserStore userStore) {
-    this.userStore = userStore;
+    AdminServlet.userStore = userStore;
   }
 
   /** Returns Data: the total number of users in the system */
