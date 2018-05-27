@@ -66,7 +66,7 @@ public class UserStore {
     users = new ArrayList<>();
 
     // hard-coded initial Admin:
-    this.addUser("Admin01", "AdminPass01", /*adminStatus=*/ true);
+    this.addUser("Admin01", "AdminPass01", /*admin=*/ true);
   }
 
   /**
@@ -78,15 +78,6 @@ public class UserStore {
     User user = new User(UUID.randomUUID(), username, hashedPassword, Instant.now());
     user.setAdmin(admin);
     this.users.add(user);
-    persistentStorageAgent.writeThrough(user);
-  }
-
-  /**
-   * Add a new user to the current set of users known to the application. This should only be called
-   * * to add a new user, not to update an existing user.
-   */
-  public void addUser(User user) {
-    users.add(user);
     persistentStorageAgent.writeThrough(user);
   }
 
@@ -117,6 +108,15 @@ public class UserStore {
       }
     }
     return null;
+  }
+
+  /**
+   * Add a new user to the current set of users known to the application. This should only be called
+   * * to add a new user, not to update an existing user.
+   */
+  public void addUser(User user) {
+    users.add(user);
+    persistentStorageAgent.writeThrough(user);
   }
 
   /** Update an existing User. */
