@@ -14,18 +14,15 @@
 
 package codeu.controller;
 
+import codeu.model.data.User;
+import codeu.model.store.basic.ConversationStore;
+import codeu.model.store.basic.MessageStore;
+import codeu.model.store.basic.UserStore;
 import java.io.IOException;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import codeu.model.store.basic.ConversationStore;
-import codeu.model.store.basic.MessageStore;
-import codeu.model.store.basic.UserStore;
-
-import codeu.model.data.User;
 
 /** Servlet class responsible for the chat page. */
 public class AdminServlet extends HttpServlet {
@@ -104,14 +101,18 @@ public class AdminServlet extends HttpServlet {
     return messageStore.getTotalMessages();
   }
 
-  public static String getMostActiveUser(){
+  /**
+   * Returns the name of most active user. The most active user is defined by the user that sends
+   * the most Messages.
+   */
+  public static String getMostActiveUser() {
     User currentMostActive = userStore.getUsers().get(0);
-    int currentMostMessages = 0;  
-    for(User user: userStore.getUsers()){
-      if(messageStore.getNumberOfMessagesByUser(user.getName()) > currentMostMessages){
+    int currentMostMessages = 0;
+    for (User user : userStore.getUsers()) {
+      if (messageStore.getNumberOfMessagesByUser(user.getName()) > currentMostMessages) {
         currentMostMessages = messageStore.getNumberOfMessagesByUser(user.getName());
         currentMostActive = user;
-      } 
+      }
     }
     return currentMostActive.getName();
   }
