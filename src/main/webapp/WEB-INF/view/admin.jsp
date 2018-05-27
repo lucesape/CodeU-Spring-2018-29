@@ -13,6 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 --%>
+<%@ page import="codeu.controller.AdminServlet" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -29,6 +30,7 @@
     <% } else{ %>
       <a href="/login">Login</a>
     <% } %>
+    <a href="/activityfeed">ActivityFeed</a>
     <a href="/about.jsp">About</a>
   </nav>
 
@@ -38,14 +40,14 @@
 
       <h1>Administration</h1>
       <p>
-        This is the administration page of the CodeU Chat App. Only the administrators of the site can view stats. 
+        This is the administration page of the CodeU Chat App. Only the administrators of the site can view stats. (Enjoy the authority!) 
       </p>
 
       <h2><strong>Site Statistics</strong></h2>
       <ul>
-        <li><strong>Total Users:</strong></li>
-        <li><strong>Total Conversations:</strong></li>
-        <li><strong>Total Messages:</strong></li>
+        <li><strong>Total Users:</strong> <%= AdminServlet.getTotalUsers() %></li>
+        <li><strong>Total Conversations:</strong> <%= AdminServlet.getTotalConversations() %></li>
+        <li><strong>Total Messages:</strong> <%= AdminServlet.getTotalMessages() %></li>
         <li><strong>Most Active User:</strong></li>
         <li><strong>Newest User:</strong></li>
         <li><strong>Wordiest User:</strong></li>

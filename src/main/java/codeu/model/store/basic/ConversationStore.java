@@ -64,7 +64,7 @@ public class ConversationStore {
     conversations = new ArrayList<>();
   }
 
-/** Access the current set of conversations known to the application. */
+  /** Access the current set of conversations known to the application. */
   public List<Conversation> getAllConversations() {
     return conversations;
   }
@@ -99,5 +99,10 @@ public class ConversationStore {
   /** Sets the List of Conversations stored by this ConversationStore. */
   public void setConversations(List<Conversation> conversations) {
     this.conversations = conversations;
+  }
+
+  /** Gets the total number of Conversations stored by this ConversationStore. */
+  public int getTotalConversations() {
+    return this.conversations.size();
   }
 }

@@ -154,4 +154,9 @@ public class UserStore {
     }
     return admins;
   }
+
+  /** Gets the number of total users stored by this UserStore. */
+  public int getTotalUsers() {
+    return this.users.size();
+  }
 }

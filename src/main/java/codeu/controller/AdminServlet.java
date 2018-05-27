@@ -14,10 +14,88 @@
 
 package codeu.controller;
 
+import codeu.model.store.basic.ConversationStore;
+import codeu.model.store.basic.MessageStore;
+import codeu.model.store.basic.UserStore;
+import java.io.IOException;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /** Servlet class responsible for the chat page. */
 public class AdminServlet extends HttpServlet {
-  // TODO(JW): To be implemented.
 
+  /** Store class that gives access to Conversations. */
+  private static ConversationStore conversationStore;
+
+  /** Store class that gives access to Messages. */
+  private static MessageStore messageStore;
+
+  /** Store class that gives access to Users. */
+  private static UserStore userStore;
+
+  /** Set up state for handling data collection for the Admin Page. */
+  @Override
+  public void init() throws ServletException {
+    super.init();
+    setConversationStore(ConversationStore.getInstance());
+    setMessageStore(MessageStore.getInstance());
+    setUserStore(UserStore.getInstance());
+  }
+
+  @Override
+  public void doGet(HttpServletRequest request, HttpServletResponse response)
+      throws IOException, ServletException {
+    request.getRequestDispatcher("/WEB-INF/view/admin.jsp").forward(request, response);
+  }
+
+  @Override
+  public void doPost(HttpServletRequest request, HttpServletResponse response)
+      throws IOException, ServletException {
+    String username = (String) request.getSession().getAttribute("user");
+    Boolean admin = userStore.getUser(username).isAdmin();
+    if (!admin) {
+      response.sendRedirect("/index");
+      return;
+    }
+  }
+
+  /**
+   * Sets the ConversationStore used by this servlet. This function provides a common setup method
+   * for use by the test framework or the servlet's init() function.
+   */
+  void setConversationStore(ConversationStore conversationStore) {
+    this.conversationStore = conversationStore;
+  }
+
+  /**
+   * Sets the MessageStore used by this servlet. This function provides a common setup method for
+   * use by the test framework or the servlet's init() function.
+   */
+  void setMessageStore(MessageStore messageStore) {
+    this.messageStore = messageStore;
+  }
+
+  /**
+   * Sets the UserStore used by this servlet. This function provides a common setup method for use
+   * by the test framework or the servlet's init() function.
+   */
+  void setUserStore(UserStore userStore) {
+    this.userStore = userStore;
+  }
+
+  /** Returns Data: the total users in the system */
+  public static int getTotalUsers() {
+    return userStore.getTotalUsers();
+  }
+
+  /** Returns the number of total conversations in the UserStore. */
+  public static int getTotalConversations() {
+    return conversationStore.getTotalConversations();
+  }
+
+  public static int getTotalMessages() {
+    return messageStore.getTotalMessages();
+  }
 }
