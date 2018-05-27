@@ -144,6 +144,11 @@ public class UserStore {
     }
   }
 
+  /** Gets a List of Users from this UserStore. */
+  public List<User> getUsers(){
+    return users;
+  }
+
   /** Gets a List of Admins filtered from the List of Users. */
   public ArrayList<User> getAdmins() {
     ArrayList<User> admins = new ArrayList<>();

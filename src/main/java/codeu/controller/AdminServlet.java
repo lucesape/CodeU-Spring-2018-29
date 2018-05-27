@@ -14,14 +14,18 @@
 
 package codeu.controller;
 
-import codeu.model.store.basic.ConversationStore;
-import codeu.model.store.basic.MessageStore;
-import codeu.model.store.basic.UserStore;
 import java.io.IOException;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import codeu.model.store.basic.ConversationStore;
+import codeu.model.store.basic.MessageStore;
+import codeu.model.store.basic.UserStore;
+
+import codeu.model.data.User;
 
 /** Servlet class responsible for the chat page. */
 public class AdminServlet extends HttpServlet {
@@ -98,5 +102,17 @@ public class AdminServlet extends HttpServlet {
   /** Returns Data: the total number of messages in the system. */
   public static int getTotalMessages() {
     return messageStore.getTotalMessages();
+  }
+
+  public static String getMostActiveUser(){
+    User currentMostActive = userStore.getUsers().get(0);
+    int currentMostMessages = 0;  
+    for(User user: userStore.getUsers()){
+      if(messageStore.getNumberOfMessagesByUser(user.getName()) > currentMostMessages){
+        currentMostMessages = messageStore.getNumberOfMessagesByUser(user.getName());
+        currentMostActive = user;
+      } 
+    }
+    return currentMostActive.getName();
   }
 }
