@@ -112,7 +112,7 @@ public class UserStore {
 
   /**
    * Add a new user to the current set of users known to the application. This should only be called
-   * * to add a new user, not to update an existing user.
+   * to add a new user, not to update an existing user.
    */
   public void addUser(User user) {
     users.add(user);

@@ -76,7 +76,7 @@ public class UserStoreTest {
 
   @Test
   public void testAddUserByName() {
-    userStore.addUser("test username1", "Password1", false);
+    userStore.addUser("test username1", "Password1", /*admin=*/false);
     User resultUser = userStore.getUser("test username1");
 
     Assert.assertEquals(resultUser.getName(), "test username1");

@@ -48,9 +48,9 @@
         <li><strong>Total Users:</strong> <%= AdminServlet.getTotalUsers() %></li>
         <li><strong>Total Conversations:</strong> <%= AdminServlet.getTotalConversations() %></li>
         <li><strong>Total Messages:</strong> <%= AdminServlet.getTotalMessages() %></li>
-        <li><strong>Most Active User:</strong></li>
-        <li><strong>Newest User:</strong></li>
-        <li><strong>Wordiest User:</strong></li>
+        <li><strong>Most Active User:</strong> <%= AdminServlet.getMostActiveUser() %></li>
+        <li><strong>Newest User:</strong> <%= AdminServlet.getNewestUser() %></li>
+        <li><strong>Wordiest User:</strong> <%= AdminServlet.getWordiestUser() %></li>
       </ul>
       
     </div>
