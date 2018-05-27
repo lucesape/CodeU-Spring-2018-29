@@ -14,11 +14,13 @@
 
 package codeu.controller;
 
+import codeu.model.data.Message;
 import codeu.model.data.User;
 import codeu.model.store.basic.ConversationStore;
 import codeu.model.store.basic.MessageStore;
 import codeu.model.store.basic.UserStore;
 import java.io.IOException;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -106,14 +108,42 @@ public class AdminServlet extends HttpServlet {
    * the most Messages.
    */
   public static String getMostActiveUser() {
-    User currentMostActive = userStore.getUsers().get(0);
+    User currentMostActiveUser = userStore.getUsers().get(0);
     int currentMostMessages = 0;
     for (User user : userStore.getUsers()) {
       if (messageStore.getNumberOfMessagesByUser(user.getName()) > currentMostMessages) {
         currentMostMessages = messageStore.getNumberOfMessagesByUser(user.getName());
-        currentMostActive = user;
+        currentMostActiveUser = user;
       }
     }
-    return currentMostActive.getName();
+    return currentMostActiveUser.getName();
+  }
+
+  /** Returns the name of the most recently added User. */
+  public static String getNewestUser() {
+    return userStore.getUsers().get(userStore.getUsers().size() - 1).getName();
+  }
+
+  /**
+   * Returns the name of the wordiest user. The wordiest user is the user that has the highest count
+   * of characters in all the Messages he/she sent, whitespace is excluded.
+   */
+  public static String getWordiestUser() {
+    User currentWordiestUser = userStore.getUsers().get(0);
+    int currentWordiest = 0;
+    for (User user : userStore.getUsers()) {
+      int wordCount = 0;
+      List<Message> messageList = messageStore.getMessagesByUser(user.getName());
+      for (Message message : messageList) {
+        message.getContent().replaceAll("\\s+", "");
+        wordCount += message.getContent().length();
+      }
+
+      if (wordCount > currentWordiest) {
+        currentWordiestUser = user;
+        currentWordiest = wordCount;
+      }
+    }
+    return currentWordiestUser.getName();
   }
 }
