@@ -85,16 +85,17 @@ public class AdminServlet extends HttpServlet {
     this.userStore = userStore;
   }
 
-  /** Returns Data: the total users in the system */
+  /** Returns Data: the total number of users in the system */
   public static int getTotalUsers() {
     return userStore.getTotalUsers();
   }
 
-  /** Returns the number of total conversations in the UserStore. */
+  /** Returns Data: the total number of conversations in the system. */
   public static int getTotalConversations() {
     return conversationStore.getTotalConversations();
   }
 
+  /** Returns Data: the total number of messages in the system. */
   public static int getTotalMessages() {
     return messageStore.getTotalMessages();
   }
