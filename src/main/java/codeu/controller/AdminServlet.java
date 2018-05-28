@@ -103,7 +103,7 @@ public class AdminServlet extends HttpServlet {
     User currentMostActiveUser = userStore.getUsers().get(0);
     int currentMostMessages = 0;
     for (User user : userStore.getUsers()) {
-      int messageCount = messageStore.getNumberOfMessagesByUser(user.getId().toString());
+      int messageCount = messageStore.getMessagesByUser(user.getId()).size();
       if (messageCount > currentMostMessages) {
         currentMostMessages = messageCount;
         currentMostActiveUser = user;
@@ -126,7 +126,7 @@ public class AdminServlet extends HttpServlet {
     int currentWordiest = 0;
     for (User user : userStore.getUsers()) {
       int wordCount = 0;
-      List<Message> messageList = messageStore.getMessagesByUser(user.getId().toString());
+      List<Message> messageList = messageStore.getMessagesByUser(user.getId());
       for (Message message : messageList) {
         message.getContent().replaceAll("\\s+", "");
         wordCount += message.getContent().length();

@@ -99,11 +99,6 @@ public class MessageStore {
     return messagesByUser;
   }
 
-  /** Gets the number of the Messages sent by current user. */
-  public int getNumberOfMessagesByUser(String userID) {
-    return getMessagesByUser(userID).size();
-  }
-
   /** Sets the List of Messages stored by this MessageStore. */
   public void setMessages(List<Message> messages) {
     this.messages = messages;
