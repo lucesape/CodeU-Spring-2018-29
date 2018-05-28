@@ -30,13 +30,13 @@ import javax.servlet.http.HttpServletResponse;
 public class AdminServlet extends HttpServlet {
 
   /** Store class that gives access to Conversations. */
-  private static ConversationStore conversationStore;
+  private ConversationStore conversationStore;
 
   /** Store class that gives access to Messages. */
-  private static MessageStore messageStore;
+  private MessageStore messageStore;
 
   /** Store class that gives access to Users. */
-  private static UserStore userStore;
+  private UserStore userStore;
 
   /** Set up state for handling data collection for the Admin Page. */
   @Override
@@ -47,9 +47,39 @@ public class AdminServlet extends HttpServlet {
     setUserStore(UserStore.getInstance());
   }
 
+  /**
+   * Sets the ConversationStore used by this servlet. This function provides a common setup method
+   * for use by the test framework or the servlet's init() function.
+   */
+  void setConversationStore(ConversationStore conversationStore) {
+    this.conversationStore = conversationStore;
+  }
+
+  /**
+   * Sets the MessageStore used by this servlet. This function provides a common setup method for
+   * use by the test framework or the servlet's init() function.
+   */
+  void setMessageStore(MessageStore messageStore) {
+    this.messageStore = messageStore;
+  }
+
+  /**
+   * Sets the UserStore used by this servlet. This function provides a common setup method for use
+   * by the test framework or the servlet's init() function.
+   */
+  void setUserStore(UserStore userStore) {
+    this.userStore = userStore;
+  }
+
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
+    request.setAttribute("totalUsers", userStore.getTotalUsers());
+    request.setAttribute("totalConversations", conversationStore.getAllConversations().size());
+    request.setAttribute("totalMessages", messageStore.getTotalMessages());
+    request.setAttribute("mostActive", getMostActiveUser());
+    request.setAttribute("newestUser", getNewestUser());
+    request.setAttribute("wordiestIU", getWordiestUser());
     request.getRequestDispatcher("/WEB-INF/view/admin.jsp").forward(request, response);
   }
 
@@ -59,60 +89,23 @@ public class AdminServlet extends HttpServlet {
     String username = (String) request.getSession().getAttribute("user");
     Boolean admin = userStore.getUser(username).isAdmin();
     if (!admin) {
-      response.sendRedirect("/index");
-      return;
+      request.setAttribute("error", "You are not an Administrator.");
+      request.getRequestDispatcher("/WEB-INF/view/index.jsp").forward(request, response);
     }
-  }
-
-  /**
-   * Sets the ConversationStore used by this servlet. This function provides a common setup method
-   * for use by the test framework or the servlet's init() function.
-   */
-  void setConversationStore(ConversationStore conversationStore) {
-    AdminServlet.conversationStore = conversationStore;
-  }
-
-  /**
-   * Sets the MessageStore used by this servlet. This function provides a common setup method for
-   * use by the test framework or the servlet's init() function.
-   */
-  void setMessageStore(MessageStore messageStore) {
-    AdminServlet.messageStore = messageStore;
-  }
-
-  /**
-   * Sets the UserStore used by this servlet. This function provides a common setup method for use
-   * by the test framework or the servlet's init() function.
-   */
-  void setUserStore(UserStore userStore) {
-    AdminServlet.userStore = userStore;
-  }
-
-  /** Returns Data: the total number of users in the system */
-  public static int getTotalUsers() {
-    return userStore.getTotalUsers();
-  }
-
-  /** Returns Data: the total number of conversations in the system. */
-  public static int getTotalConversations() {
-    return conversationStore.getTotalConversations();
-  }
-
-  /** Returns Data: the total number of messages in the system. */
-  public static int getTotalMessages() {
-    return messageStore.getTotalMessages();
+    response.sendRedirect("/admin");
   }
 
   /**
    * Returns the name of most active user. The most active user is defined by the user that sends
    * the most Messages.
    */
-  public static String getMostActiveUser() {
+  public String getMostActiveUser() {
     User currentMostActiveUser = userStore.getUsers().get(0);
     int currentMostMessages = 0;
     for (User user : userStore.getUsers()) {
-      if (messageStore.getNumberOfMessagesByUser(user.getName()) > currentMostMessages) {
-        currentMostMessages = messageStore.getNumberOfMessagesByUser(user.getName());
+      int messageCount = messageStore.getNumberOfMessagesByUser(user.getId().toString());
+      if (messageCount > currentMostMessages) {
+        currentMostMessages = messageCount;
         currentMostActiveUser = user;
       }
     }
@@ -120,7 +113,7 @@ public class AdminServlet extends HttpServlet {
   }
 
   /** Returns the name of the most recently added User. */
-  public static String getNewestUser() {
+  public String getNewestUser() {
     return userStore.getUsers().get(userStore.getUsers().size() - 1).getName();
   }
 
@@ -128,17 +121,16 @@ public class AdminServlet extends HttpServlet {
    * Returns the name of the wordiest user. The wordiest user is the user that has the highest count
    * of characters in all the Messages he/she sent, whitespace is excluded.
    */
-  public static String getWordiestUser() {
+  public String getWordiestUser() {
     User currentWordiestUser = userStore.getUsers().get(0);
     int currentWordiest = 0;
     for (User user : userStore.getUsers()) {
       int wordCount = 0;
-      List<Message> messageList = messageStore.getMessagesByUser(user.getName());
+      List<Message> messageList = messageStore.getMessagesByUser(user.getId().toString());
       for (Message message : messageList) {
         message.getContent().replaceAll("\\s+", "");
         wordCount += message.getContent().length();
       }
-
       if (wordCount > currentWordiest) {
         currentWordiestUser = user;
         currentWordiest = wordCount;

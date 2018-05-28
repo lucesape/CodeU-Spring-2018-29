@@ -101,8 +101,8 @@ public class MessageStore {
   }
 
   /** Gets the number of the Messages sent by current user. */
-  public int getNumberOfMessagesByUser(String username){
-    return getMessagesByUser(username).size();
+  public int getNumberOfMessagesByUser(String userID) {
+    return getMessagesByUser(userID).size();
   }
 
   /** Sets the List of Messages stored by this MessageStore. */
