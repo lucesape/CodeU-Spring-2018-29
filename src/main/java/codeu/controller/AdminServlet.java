@@ -74,7 +74,7 @@ public class AdminServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
-    request.setAttribute("totalUsers", userStore.getTotalUsers());
+    request.setAttribute("totalUsers", userStore.getUsers().size());
     request.setAttribute("totalConversations", conversationStore.getAllConversations().size());
     request.setAttribute("totalMessages", messageStore.getTotalMessages());
     request.setAttribute("mostActive", getMostActiveUser());
