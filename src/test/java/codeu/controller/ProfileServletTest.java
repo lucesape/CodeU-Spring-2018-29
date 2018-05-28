@@ -87,3 +87,23 @@ public class ProfileServletTest {
     Mockito.verify(mockRequest).setAttribute("user", fakeUser);
     Mockito.verify(mockRequestDispatcher).forward(mockRequest, mockResponse);
   }
+
+  @Test
+  public void testDoPost() throws IOException, ServletException {
+
+  }
+
+  @Test
+  public void testDoPost_AboutMeContent() throws IOException, ServletException {
+
+  }
+
+  @Test
+  public void testDoPost_CleansHtmlContent() throws IOException, ServletException {
+
+  }
+
+  @Test
+  public void testDoPost_StoresMessage() throws IOException, ServletException {
+
+  }
