@@ -48,9 +48,9 @@
         <li><strong>Total Users: </strong><%= request.getAttribute("totalUsers")%></li>
         <li><strong>Total Conversations: </strong><%= request.getAttribute("totalConversations")%></li>
         <li><strong>Total Messages: </strong><%= request.getAttribute("totalMessages")%></li>
-        <li><strong>Most Active User:</strong></li>
-        <li><strong>Newest User:</strong></li>
-        <li><strong>Wordiest User:</strong></li>
+        <li><strong>Most Active User:</strong><%= request.getAttribute("mostActive")%></li>
+        <li><strong>Newest User:</strong><%= request.getAttribute("newestUser")%></li>
+        <li><strong>Wordiest User:</strong><%= request.getAttribute("WordiestUser")%></li>
       </ul>
       
     </div>
