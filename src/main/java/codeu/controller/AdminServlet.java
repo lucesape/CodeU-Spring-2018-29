@@ -26,7 +26,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/** Servlet class responsible for the chat page. */
+/** Servlet class responsible for the Admin page. */
 public class AdminServlet extends HttpServlet {
 
   /** Store class that gives access to Conversations. */
@@ -79,7 +79,7 @@ public class AdminServlet extends HttpServlet {
     request.setAttribute("totalMessages", messageStore.getTotalMessages());
     request.setAttribute("mostActive", getMostActiveUser());
     request.setAttribute("newestUser", getNewestUser());
-    request.setAttribute("wordiestIU", getWordiestUser());
+    request.setAttribute("WordiestUser", getWordiestUser());
     request.getRequestDispatcher("/WEB-INF/view/admin.jsp").forward(request, response);
   }
 
@@ -125,15 +125,15 @@ public class AdminServlet extends HttpServlet {
     User currentWordiestUser = userStore.getUsers().get(0);
     int currentWordiest = 0;
     for (User user : userStore.getUsers()) {
-      int wordCount = 0;
+      int charCount = 0;
       List<Message> messageList = messageStore.getMessagesByUser(user.getId());
       for (Message message : messageList) {
-        message.getContent().replaceAll("\\s+", "");
-        wordCount += message.getContent().length();
+        String characters = message.getContent().replaceAll("\\s+", "");
+        charCount += characters.length();
       }
-      if (wordCount > currentWordiest) {
+      if (charCount > currentWordiest) {
         currentWordiestUser = user;
-        currentWordiest = wordCount;
+        currentWordiest = charCount;
       }
     }
     return currentWordiestUser.getName();
