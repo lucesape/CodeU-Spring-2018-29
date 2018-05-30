@@ -23,8 +23,11 @@ import java.time.Instant;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 import java.util.List;
+import java.util.ArrayList;
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServlet;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.jsoup.Jsoup;
@@ -59,10 +62,10 @@ public class ProfileServletTest {
         .thenReturn(mockRequestDispatcher);
 
     mockMessageStore = Mockito.mock(MessageStore.class);
-    chatServlet.setMessageStore(mockMessageStore);
+    profileServlet.setMessageStore(mockMessageStore);
 
     mockUserStore = Mockito.mock(UserStore.class);
-    chatServlet.setUserStore(mockUserStore);
+    profileServlet.setUserStore(mockUserStore);
   }
 
   @Test
@@ -76,18 +79,21 @@ public class ProfileServletTest {
             "&**92.jdaGHiI9lnguligeilUYYDiugepIPiopifb21",
             Instant.now());
 
-    List<Message> fakeMessagesByUserList = new ArrayList<>();
+    List<Message> fakeMessagesByUser = new ArrayList<>();
 
     Mockito.when(mockMessageStore.getMessagesByUser(fakeUser.getId()))
-        .thenReturn(fakeMessagesByUserList);
+        .thenReturn(fakeMessagesByUser);
 
     profileServlet.doGet(mockRequest, mockResponse);
 
-    Mockito.verify(mockRequest).setAttribute("messagesByUser", fakeMessagesByUserList);
+    Mockito.verify(mockRequest).setAttribute("messagesByUser", fakeMessagesByUser);
     Mockito.verify(mockRequest).setAttribute("user", fakeUser);
+
     Mockito.verify(mockRequestDispatcher).forward(mockRequest, mockResponse);
+
   }
 
+/*
   @Test
   public void testDoPost_UserNotLoggedIn() throws IOException, ServletException {
     Mockito.when(mockSession.getAttribute("user")).thenReturn(null);
@@ -103,10 +109,37 @@ public class ProfileServletTest {
     Mockito.when(mockSession.getAttribute("user")).thenReturn("test_user");
     Mockito.when(mockUserStore.getUser("test_user")).thenReturn(null);
 
-    chatServlet.doPost(mockRequest, mockResponse);
+    profileServlet.doPost(mockRequest, mockResponse);
 
     Mockito.verify(mockMessageStore, Mockito.never()).addMessage(Mockito.any(Message.class));
     Mockito.verify(mockResponse).sendRedirect("/login");
   }
 
-  
+
+  @Test
+  public void testDoPost_CleansHtmlContent() throws IOException, ServletException {
+    Mockito.when(mockRequest.getRequestURI()).thenReturn("/users/test_user");
+    Mockito.when(mockSession.getAttribute("user")).thenReturn("test_user");
+
+    User fakeUser =
+        new User(
+            UUID.randomUUID(),
+            "test_user",
+            "&**92.jdaGHiI9lnguligeilUYYDiugepIPiopifb21",
+            Instant.now());
+    Mockito.when(mockUserStore.getUser("test_user")).thenReturn(fakeUser);
+
+    Mockito.when(mockRequest.getParameter("About me"))
+        .thenReturn("Contains <b>html</b> and <script>JavaScript</script> content.");
+
+    profileServlet.doPost(mockRequest, mockResponse);
+
+    ArgumentCaptor<Message> messageArgumentCaptor = ArgumentCaptor.forClass(Message.class);
+    Mockito.verify(mockMessageStore).addMessage(messageArgumentCaptor.capture());
+    Assert.assertEquals(
+        "Contains html and  content.", messageArgumentCaptor.getValue().getContent());
+
+    Mockito.verify(mockResponse).sendRedirect("/users/test_user");
+  }
+  */
+}
