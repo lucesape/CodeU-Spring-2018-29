@@ -89,21 +89,24 @@ public class ProfileServletTest {
   }
 
   @Test
-  public void testDoPost() throws IOException, ServletException {
+  public void testDoPost_UserNotLoggedIn() throws IOException, ServletException {
+    Mockito.when(mockSession.getAttribute("user")).thenReturn(null);
 
+    profileServlet.doPost(mockRequest, mockResponse);
+
+    Mockito.verify(mockMessageStore, Mockito.never()).addMessage(Mockito.any(Message.class));
+    Mockito.verify(mockResponse).sendRedirect("/login");
   }
 
   @Test
-  public void testDoPost_AboutMeContent() throws IOException, ServletException {
+  public void testDoPost_InvalidUser() throws IOException, ServletException {
+    Mockito.when(mockSession.getAttribute("user")).thenReturn("test_user");
+    Mockito.when(mockUserStore.getUser("test_user")).thenReturn(null);
 
+    chatServlet.doPost(mockRequest, mockResponse);
+
+    Mockito.verify(mockMessageStore, Mockito.never()).addMessage(Mockito.any(Message.class));
+    Mockito.verify(mockResponse).sendRedirect("/login");
   }
 
-  @Test
-  public void testDoPost_CleansHtmlContent() throws IOException, ServletException {
-
-  }
-
-  @Test
-  public void testDoPost_StoresMessage() throws IOException, ServletException {
-
-  }
+  
