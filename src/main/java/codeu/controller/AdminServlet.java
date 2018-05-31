@@ -119,7 +119,7 @@ public class AdminServlet extends HttpServlet {
 
   /**
    * Returns the name of the wordiest user. The wordiest user is the user that has the highest count
-   * of characters in all the Messages he/she sent, whitespace is excluded.
+   * of characters in all the Messages the user sent, whitespace is excluded.
    */
   public String getWordiestUser() {
     User currentWordiestUser = userStore.getUsers().get(0);
