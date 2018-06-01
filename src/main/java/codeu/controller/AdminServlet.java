@@ -79,7 +79,7 @@ public class AdminServlet extends HttpServlet {
     request.setAttribute("totalMessages", messageStore.getTotalMessages());
     request.setAttribute("mostActive", getMostActiveUser());
     request.setAttribute("newestUser", getNewestUser());
-    request.setAttribute("WordiestUser", getWordiestUser());
+    request.setAttribute("wordiestUser", getWordiestUser());
     request.getRequestDispatcher("/WEB-INF/view/admin.jsp").forward(request, response);
   }
 
@@ -100,6 +100,9 @@ public class AdminServlet extends HttpServlet {
    * the most Messages.
    */
   public String getMostActiveUser() {
+    if (userStore.getUsers().isEmpty()) {
+      return "No Users.";
+    }
     User currentMostActiveUser = userStore.getUsers().get(0);
     int currentMostMessages = 0;
     for (User user : userStore.getUsers()) {
@@ -114,6 +117,9 @@ public class AdminServlet extends HttpServlet {
 
   /** Returns the name of the most recently added User. */
   public String getNewestUser() {
+    if (userStore.getUsers().isEmpty()) {
+      return "No Users.";
+    }
     return userStore.getUsers().get(userStore.getUsers().size() - 1).getName();
   }
 
@@ -122,6 +128,9 @@ public class AdminServlet extends HttpServlet {
    * of characters in all the Messages the user sent, whitespace is excluded.
    */
   public String getWordiestUser() {
+    if (userStore.getUsers().isEmpty()) {
+      return "No Users.";
+    }
     User currentWordiestUser = userStore.getUsers().get(0);
     int currentWordiest = 0;
     for (User user : userStore.getUsers()) {
