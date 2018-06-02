@@ -80,7 +80,13 @@ public class ProfileServletTest {
             Instant.now());
 
     List<Message> fakeMessagesByUser = new ArrayList<>();
-
+    fakeMessagesByUser.add(
+        new Message(
+            UUID.randomUUID(),
+            UUID.randomUUID(),
+            fakeUser.getId(),
+            "test message",
+            Instant.now()));
     Mockito.when(mockMessageStore.getMessagesByUser(fakeUser.getId()))
         .thenReturn(fakeMessagesByUser);
 
@@ -90,7 +96,6 @@ public class ProfileServletTest {
     Mockito.verify(mockRequest).setAttribute("user", fakeUser);
 
     Mockito.verify(mockRequestDispatcher).forward(mockRequest, mockResponse);
-
   }
 
 /*
