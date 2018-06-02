@@ -45,51 +45,51 @@ public class ModelDataTestHelpers {
    * <pre>{@code
    * UUID fakeAuthor = UUID.randomUUID();
    * String fakeContent = "test message 1";
-   * Message fakeMessage = new TestMessageBuilder().author(fakeAuthor).content(fakeContent).build();
+   * Message fakeMessage = new TestMessageBuilder().withAuthorId(fakeAuthor).withContent(fakeContent).build();
    * }</pre>
    */
   public static class TestMessageBuilder {
+    private UUID id;
+    private UUID conversationId;
+    private UUID authorId;
+    private String content;
+    private Instant creationTime;
+
     public TestMessageBuilder() {
       this.id = UUID.randomUUID();
-      this.conversation = UUID.randomUUID();
-      this.author = UUID.randomUUID();
+      this.conversationId = UUID.randomUUID();
+      this.authorId = UUID.randomUUID();
       this.content = UUID.randomUUID().toString();
-      this.creation = Instant.now();
+      this.creationTime = Instant.now();
     }
 
-    public TestMessageBuilder id(UUID id) {
+    public TestMessageBuilder withId(UUID id) {
       this.id = id;
       return this;
     }
 
-    public TestMessageBuilder conversation(UUID conversation) {
-      this.conversation = conversation;
+    public TestMessageBuilder withConversationId(UUID conversationId) {
+      this.conversationId = conversationId;
       return this;
     }
 
-    public TestMessageBuilder author(UUID author) {
-      this.author = author;
+    public TestMessageBuilder withAuthorId(UUID authorId) {
+      this.authorId = authorId;
       return this;
     }
 
-    public TestMessageBuilder content(String content) {
+    public TestMessageBuilder withContent(String content) {
       this.content = content;
       return this;
     }
 
-    public TestMessageBuilder creation(Instant creation) {
-      this.creation = creation;
+    public TestMessageBuilder withCreationTime(Instant creationTime) {
+      this.creationTime = creationTime;
       return this;
     }
 
     public Message build() {
-      return new Message(id, conversation, author, content, creation);
+      return new Message(id, conversationId, authorId, content, creationTime);
     }
-
-    private UUID id;
-    private UUID conversation;
-    private UUID author;
-    private String content;
-    private Instant creation;
   }
 }
