@@ -89,7 +89,7 @@ public class ChatServletTest {
         .thenReturn(fakeConversation);
 
     List<Message> fakeMessageList = new ArrayList<>();
-    fakeMessageList.add(new TestMessageBuilder().conversation(fakeConversationId).build());
+    fakeMessageList.add(new TestMessageBuilder().withConversationId(fakeConversationId).build());
     Mockito.when(mockMessageStore.getMessagesInConversation(fakeConversationId))
         .thenReturn(fakeMessageList);
 
