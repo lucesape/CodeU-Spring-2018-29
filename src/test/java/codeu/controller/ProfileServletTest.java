@@ -14,29 +14,30 @@
 
 package codeu.controller;
 
-import codeu.model.data.Message;
-import codeu.model.data.User;
-import codeu.model.store.basic.MessageStore;
-import codeu.model.store.basic.UserStore;
 import java.io.IOException;
-import java.time.Instant;
-import java.time.format.DateTimeFormatter;
-import java.util.UUID;
-import java.util.List;
 import java.util.ArrayList;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpServlet;
+import java.util.List;
+import java.util.UUID;
+
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.jsoup.Jsoup;
-import org.jsoup.safety.Whitelist;
+import javax.servlet.http.HttpSession;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
+
+import codeu.model.data.Message;
+import codeu.model.data.ModelDataTestHelpers.TestConversationBuilder;
+import codeu.model.data.ModelDataTestHelpers.TestMessageBuilder;
+import codeu.model.data.ModelDataTestHelpers.TestUserBuilder;
+import codeu.model.data.User;
+import codeu.model.store.basic.MessageStore;
+import codeu.model.store.basic.UserStore;
 
 public class ProfileServletTest {
 
@@ -70,23 +71,14 @@ public class ProfileServletTest {
 
   @Test
   public void testDoGet() throws IOException, ServletException {
+
+    User fakeUser = new TestUserBuilder().withName("test_user").build();
     Mockito.when(mockRequest.getRequestURI()).thenReturn("/users/test_user");
 
-    User fakeUser =
-        new User(
-            UUID.randomUUID(),
-            "test_user",
-            "&**92.jdaGHiI9lnguligeilUYYDiugepIPiopifb21",
-            Instant.now());
-
     List<Message> fakeMessagesByUser = new ArrayList<>();
-    fakeMessagesByUser.add(
-        new Message(
-            UUID.randomUUID(),
-            UUID.randomUUID(),
-            fakeUser.getId(),
-            "test message",
-            Instant.now()));
+
+    fakeMessagesByUser.add(new TestMessageBuilder().withAuthorId().build());
+
     Mockito.when(mockMessageStore.getMessagesByUser(fakeUser.getId()))
         .thenReturn(fakeMessagesByUser);
 
@@ -94,57 +86,6 @@ public class ProfileServletTest {
 
     Mockito.verify(mockRequest).setAttribute("messagesByUser", fakeMessagesByUser);
     Mockito.verify(mockRequest).setAttribute("user", fakeUser);
-
     Mockito.verify(mockRequestDispatcher).forward(mockRequest, mockResponse);
   }
-
-/*
-  @Test
-  public void testDoPost_UserNotLoggedIn() throws IOException, ServletException {
-    Mockito.when(mockSession.getAttribute("user")).thenReturn(null);
-
-    profileServlet.doPost(mockRequest, mockResponse);
-
-    Mockito.verify(mockMessageStore, Mockito.never()).addMessage(Mockito.any(Message.class));
-    Mockito.verify(mockResponse).sendRedirect("/login");
-  }
-
-  @Test
-  public void testDoPost_InvalidUser() throws IOException, ServletException {
-    Mockito.when(mockSession.getAttribute("user")).thenReturn("test_user");
-    Mockito.when(mockUserStore.getUser("test_user")).thenReturn(null);
-
-    profileServlet.doPost(mockRequest, mockResponse);
-
-    Mockito.verify(mockMessageStore, Mockito.never()).addMessage(Mockito.any(Message.class));
-    Mockito.verify(mockResponse).sendRedirect("/login");
-  }
-
-
-  @Test
-  public void testDoPost_CleansHtmlContent() throws IOException, ServletException {
-    Mockito.when(mockRequest.getRequestURI()).thenReturn("/users/test_user");
-    Mockito.when(mockSession.getAttribute("user")).thenReturn("test_user");
-
-    User fakeUser =
-        new User(
-            UUID.randomUUID(),
-            "test_user",
-            "&**92.jdaGHiI9lnguligeilUYYDiugepIPiopifb21",
-            Instant.now());
-    Mockito.when(mockUserStore.getUser("test_user")).thenReturn(fakeUser);
-
-    Mockito.when(mockRequest.getParameter("About me"))
-        .thenReturn("Contains <b>html</b> and <script>JavaScript</script> content.");
-
-    profileServlet.doPost(mockRequest, mockResponse);
-
-    ArgumentCaptor<Message> messageArgumentCaptor = ArgumentCaptor.forClass(Message.class);
-    Mockito.verify(mockMessageStore).addMessage(messageArgumentCaptor.capture());
-    Assert.assertEquals(
-        "Contains html and  content.", messageArgumentCaptor.getValue().getContent());
-
-    Mockito.verify(mockResponse).sendRedirect("/users/test_user");
-  }
-  */
 }
