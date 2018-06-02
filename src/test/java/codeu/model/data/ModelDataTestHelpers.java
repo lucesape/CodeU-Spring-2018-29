@@ -15,13 +15,26 @@
 package codeu.model.data;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import java.time.Instant;
 import java.util.UUID;
 
 public class ModelDataTestHelpers {
+
+  /** Asserts that all fields on both Conversations are the same. */
+  public static void assertConversationEquals(Conversation expected, Conversation actual) {
+    if (expected == null) {
+      assertNull(actual);
+    } else {
+      assertNotNull("Conversation not found", actual);
+      assertEquals(expected.getId(), actual.getId());
+      assertEquals(expected.getOwnerId(), actual.getOwnerId());
+      assertEquals(expected.getTitle(), actual.getTitle());
+      assertEquals(expected.getCreationTime(), actual.getCreationTime());
+    }
+  }
 
   /** Asserts that all fields on both Messages are the same. */
   public static void assertMessageEquals(Message expected, Message actual) {
@@ -34,6 +47,68 @@ public class ModelDataTestHelpers {
       assertEquals(expected.getAuthorId(), actual.getAuthorId());
       assertEquals(expected.getContent(), actual.getContent());
       assertEquals(expected.getCreationTime(), actual.getCreationTime());
+    }
+  }
+
+  /** Asserts that all fields on both Users are the same. */
+  public static void assertUserEquals(User expected, User actual) {
+    if (expected == null) {
+      assertNull(actual);
+    } else {
+      assertNotNull("User not found", actual);
+      assertEquals(expected.getId(), actual.getId());
+      assertEquals(expected.getName(), actual.getName());
+      assertEquals(expected.getPasswordHash(), actual.getPasswordHash());
+      assertEquals(expected.getCreationTime(), actual.getCreationTime());
+    }
+  }
+
+  /**
+   * Use this to create a fake Conversation to use in a unit test. When created it contains random
+   * data in every field, and the individual methods can be used to set the test conditions. For
+   * example, if the test needs specific owner ID and title, then you could do:
+   *
+   * <pre>{@code
+   * UUID fakeOwner = UUID.randomUUID();
+   * String fakeTitle = "test title 1";
+   * Conversation fakeConversation = new TestConversationBuilder().withOwnerId(fakeOwner).withTitle(fakeTitle).build();
+   * }</pre>
+   */
+  public static class TestConversationBuilder {
+    private UUID id;
+    private UUID ownerId;
+    private String title;
+    private Instant creationTime;
+
+    public TestConversationBuilder() {
+      this.id = UUID.randomUUID();
+      this.ownerId = UUID.randomUUID();
+      this.title = UUID.randomUUID().toString();
+      this.creationTime = Instant.now();
+    }
+
+    public TestConversationBuilder withId(UUID id) {
+      this.id = id;
+      return this;
+    }
+
+    public TestConversationBuilder withOwnerId(UUID ownerId) {
+      this.ownerId = ownerId;
+      return this;
+    }
+
+    public TestConversationBuilder withTitle(String title) {
+      this.title = title;
+      return this;
+    }
+
+    public TestConversationBuilder withCreationTime(Instant creationTime) {
+      this.creationTime = creationTime;
+      return this;
+    }
+
+    public Conversation build() {
+      return new Conversation(id, ownerId, title, creationTime);
     }
   }
 
@@ -90,6 +165,54 @@ public class ModelDataTestHelpers {
 
     public Message build() {
       return new Message(id, conversationId, authorId, content, creationTime);
+    }
+  }
+
+  /**
+   * Use this to create a fake User to use in a unit test. When created it contains random data in
+   * every field, and the individual methods can be used to set the test conditions. For example, if
+   * the test needs specific name, then you could do:
+   *
+   * <pre>{@code
+   * String fakeName = "Alex Smith";
+   * User fakeUser = new TestUserBuilder().name(fakeName).build();
+   * }</pre>
+   */
+  public static class TestUserBuilder {
+    private UUID id;
+    private String name;
+    private String passwordHash;
+    private Instant creationTime;
+
+    public TestUserBuilder() {
+      this.id = UUID.randomUUID();
+      this.name = UUID.randomUUID().toString();
+      this.passwordHash = UUID.randomUUID().toString();
+      this.creationTime = Instant.now();
+    }
+
+    public TestUserBuilder withId(UUID id) {
+      this.id = id;
+      return this;
+    }
+
+    public TestUserBuilder withName(String name) {
+      this.name = name;
+      return this;
+    }
+
+    public TestUserBuilder withPasswordHash(String passwordHash) {
+      this.passwordHash = passwordHash;
+      return this;
+    }
+
+    public TestUserBuilder withCreationTime(Instant creationTime) {
+      this.creationTime = creationTime;
+      return this;
+    }
+
+    public User build() {
+      return new User(id, name, passwordHash, creationTime);
     }
   }
 }
