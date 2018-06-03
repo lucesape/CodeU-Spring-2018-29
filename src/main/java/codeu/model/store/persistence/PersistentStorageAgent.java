@@ -17,6 +17,7 @@ package codeu.model.store.persistence;
 import codeu.model.data.Conversation;
 import codeu.model.data.Message;
 import codeu.model.data.User;
+import codeu.model.data.Hashtag;
 import codeu.model.store.persistence.PersistentDataStore;
 import java.util.List;
 
@@ -89,6 +90,10 @@ public class PersistentStorageAgent {
     return persistentDataStore.loadMessages();
   }
 
+  public List<Hashtag> loadHashtags() throws PersistentDataStoreException {
+    return persistentDataStore.loadHashtags();
+  }
+
   /** Write a User object to the Datastore service. */
   public void writeThrough(User user) {
     persistentDataStore.writeThrough(user);
@@ -103,4 +108,9 @@ public class PersistentStorageAgent {
   public void writeThrough(Message message) {
     persistentDataStore.writeThrough(message);
   }
+
+    /** Write a Hashtag object to the Datastore service. */
+    public void writeThrough(Hashtag hashtag) {
+      persistentDataStore.writeThrough(hashtag);
+    }
 }
