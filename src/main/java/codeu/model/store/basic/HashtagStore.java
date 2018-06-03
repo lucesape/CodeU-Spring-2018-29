@@ -14,16 +14,16 @@
 
 package codeu.model.store.basic;
 
-import java.util.List;
 import codeu.model.data.Hashtag;
 import codeu.model.store.persistence.PersistentStorageAgent;
-import java.util.ArrayList;
-import java.util.UUID;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 public class HashtagStore {
 
-    /** Singleton instance of ConversationStore. */
+  /** Singleton instance of ConversationStore. */
   private static HashtagStore instance;
 
   /**
@@ -37,7 +37,7 @@ public class HashtagStore {
     return instance;
   }
 
-    /**
+  /**
    * Instance getter function used for testing. Supply a mock for PersistentStorageAgent.
    *
    * @param persistentStorageAgent a mock used for testing
@@ -46,7 +46,7 @@ public class HashtagStore {
     return new HashtagStore(persistentStorageAgent);
   }
 
-    /**
+  /**
    * The PersistentStorageAgent responsible for loading Users from and saving Users to Datastore.
    */
   private PersistentStorageAgent persistentStorageAgent;
@@ -60,8 +60,8 @@ public class HashtagStore {
     hashtags = new ArrayList<>();
   }
 
-/** Add a new Hashtag to the current set of Hashtags known to the applications. */
-  public void addHashtag(UUID id, UUID ownerId, String content, Instant creation){
+  /** Add a new Hashtag to the current set of Hashtags known to the applications. */
+  public void addHashtag(UUID id, UUID ownerId, String content, Instant creation) {
     Hashtag hashtag = new Hashtag(UUID.randomUUID(), UUID.randomUUID(), content, Instant.now());
     this.hashtags.add(hashtag);
     persistentStorageAgent.writeThrough(hashtag);

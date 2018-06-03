@@ -20,31 +20,31 @@ import java.util.UUID;
 /** Class representing a hashtag. */
 public class Hashtag {
 
-    private final UUID id;//very hashtag has an
-    private final UUID ownerId;
-    private final Instant creation;
-    private final String content;
+  private final UUID id; // very hashtag has an
+  private final UUID ownerId;
+  private final Instant creation;
+  private final String content;
 
-    public Hashtag(UUID id, UUID ownerId, String content, Instant creation){
-        this.id = id;
-        this.ownerId = ownerId;
-        this.content = content;
-        this.creation = creation;
-    }
+  public Hashtag(UUID id, UUID ownerId, String content, Instant creation) {
+    this.id = id;
+    this.ownerId = ownerId;
+    this.content = content;
+    this.creation = creation;
+  }
 
-    public UUID getId(){
-        return this.id;
-    }
+  public UUID getId() {
+    return this.id;
+  }
 
-    public UUID getOwnerId(){
-        return this.ownerId;
-    }
+  public UUID getOwnerId() {
+    return this.ownerId;
+  }
 
-    public Instant getCreationTime(){
-        return this.creation;
-    }
+  public Instant getCreationTime() {
+    return this.creation;
+  }
 
-    public String getContent(){
-        return this.content;
-    }
+  public String getContent() {
+    return this.content;
+  }
 }
