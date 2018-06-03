@@ -17,6 +17,7 @@ package codeu.model.store.persistence;
 import codeu.model.data.Conversation;
 import codeu.model.data.Message;
 import codeu.model.data.User;
+import codeu.model.data.Hashtag;
 import codeu.model.store.persistence.PersistentDataStoreException;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
@@ -149,6 +150,33 @@ public class PersistentDataStore {
     return messages;
   }
 
+  public List<Hashtag> loadHashtags() throws PersistentDataStoreException {
+
+    List<Hashtag> hashtags = new ArrayList<>();
+
+    // Retrieve all hashtags from the datastore.
+    Query query = new Query("chat-hashtags").addSort("creation_time", SortDirection.ASCENDING);
+    PreparedQuery results = datastore.prepare(query);
+
+    for (Entity entity : results.asIterable()) {
+      try {
+        UUID uuid = UUID.fromString((String) entity.getProperty("uuid"));
+        UUID authorUuid = UUID.fromString((String) entity.getProperty("author_uuid"));
+        Instant creationTime = Instant.parse((String) entity.getProperty("creation_time"));
+        String content = (String) entity.getProperty("content");
+        Hashtag hashtag = new Hashtag(uuid, authorUuid, content, creationTime);
+        hashtags.add(hashtag);
+      } catch (Exception e) {
+        // In a production environment, errors should be very rare. Errors which may
+        // occur include network errors, Datastore service errors, authorization errors,
+        // database entity definition mismatches, or service mismatches.
+        throw new PersistentDataStoreException(e);
+      }
+    }
+
+    return hashtags;
+  }
+
   /** Write a User object to the Datastore service. */
   public void writeThrough(User user) {
     Entity userEntity = new Entity("chat-users", user.getId().toString());
@@ -180,4 +208,14 @@ public class PersistentDataStore {
     conversationEntity.setProperty("creation_time", conversation.getCreationTime().toString());
     datastore.put(conversationEntity);
   }
+
+    /** Write a Hashtag object to the Datastore service. */
+    public void writeThrough(Hashtag hashtag) {
+      Entity conversationEntity = new Entity("chat-hashtags", hashtag.getId().toString());
+      conversationEntity.setProperty("uuid", hashtag.getId().toString());
+      conversationEntity.setProperty("owner_uuid", hashtag.getOwnerId().toString());
+      conversationEntity.setProperty("content", hashtag.getContent());
+      conversationEntity.setProperty("creation_time", hashtag.getCreationTime().toString());
+      datastore.put(conversationEntity);
+    }
 }
