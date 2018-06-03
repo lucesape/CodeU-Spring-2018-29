@@ -32,7 +32,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
 import codeu.model.data.Message;
-import codeu.model.data.ModelDataTestHelpers.TestConversationBuilder;
 import codeu.model.data.ModelDataTestHelpers.TestMessageBuilder;
 import codeu.model.data.ModelDataTestHelpers.TestUserBuilder;
 import codeu.model.data.User;
@@ -76,9 +75,7 @@ public class ProfileServletTest {
     Mockito.when(mockRequest.getRequestURI()).thenReturn("/users/test_user");
 
     List<Message> fakeMessagesByUser = new ArrayList<>();
-
-    fakeMessagesByUser.add(new TestMessageBuilder().withAuthorId().build());
-
+    fakeMessagesByUser.add(new TestMessageBuilder().withAuthorId(fakeUser.getId()).build());
     Mockito.when(mockMessageStore.getMessagesByUser(fakeUser.getId()))
         .thenReturn(fakeMessagesByUser);
 
