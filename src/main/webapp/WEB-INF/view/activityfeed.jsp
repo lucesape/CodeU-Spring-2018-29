@@ -5,7 +5,9 @@
   <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
-  <%@ include file = "navigations.jsp" %>
+  <nav>
+    <%@ include file = "/navigations.jsp" %>
+  </nav>
   <div id="activityfeed">
     <h2 style="color:blue"> WELCOME TO THE <strong> ACTIVITY FEED PAGE </strong> (in progress) </h2>
   </div>

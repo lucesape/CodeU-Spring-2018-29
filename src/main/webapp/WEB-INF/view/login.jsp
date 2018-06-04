@@ -20,7 +20,9 @@
   <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
-  <%@ include file = "navigations.jsp" %>
+  <nav>
+    <%@ include file = "/navigations.jsp" %>
+  </nav>
 
   <div id="container">
     <h1>Login</h1>

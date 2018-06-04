@@ -54,7 +54,9 @@ List<Message> messagesByUser = (List<Message>) request.getAttribute("messagesByU
   </script>
 </head>
 <body>
-  <%@ include file = "navigations.jsp" %>
+  <nav>
+    <%@ include file = "/navigations.jsp" %>
+  </nav>
 
   <div id="container">
     <% if (request.getAttribute("error") != null) { %>

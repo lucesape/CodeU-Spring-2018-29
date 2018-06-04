@@ -26,7 +26,9 @@ List<Conversation> conversations = (List<Conversation>) request.getAttribute("co
   <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
-  <%@ include file = "navigations.jsp" %>
+  <nav>
+    <%@ include file = "/navigations.jsp" %>
+  </nav>
 
   <div id="container">
 
