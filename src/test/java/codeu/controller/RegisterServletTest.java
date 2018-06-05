@@ -59,7 +59,7 @@ public class RegisterServletTest {
     registerServlet.setUserStore(mockUserStore);
 
     registerServlet.doPost(mockRequest, mockResponse);
-    Mockito.verify(mockUserStore).addUser("test username", "test password", false);
+    Mockito.verify(mockUserStore).addUser("test username", "test password", /*admin=*/false);
     Mockito.verify(mockResponse).sendRedirect("/login");
   }
 
