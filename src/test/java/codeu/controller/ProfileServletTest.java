@@ -72,6 +72,8 @@ public class ProfileServletTest {
   public void testDoGet() throws IOException, ServletException {
 
     User fakeUser = new TestUserBuilder().withName("test_user").build();
+    Mockito.when(mockUserStore.getUser(fakeUser.getId()))
+        .thenReturn(fakeUser);
     Mockito.when(mockRequest.getRequestURI()).thenReturn("/users/test_user");
 
     List<Message> fakeMessagesByUser = new ArrayList<>();
@@ -84,5 +86,31 @@ public class ProfileServletTest {
     Mockito.verify(mockRequest).setAttribute("messagesByUser", fakeMessagesByUser);
     Mockito.verify(mockRequest).setAttribute("user", fakeUser);
     Mockito.verify(mockRequestDispatcher).forward(mockRequest, mockResponse);
+  }
+
+  /* Test to handle user requests to access a profile that it not theirs. */
+  @Test
+  public void testDoGet_NotMyProfile() throws IOException, ServletException {
+  }
+
+  @Test
+  public void testDoPost_UserNotLoggedIn() throws IOException, ServletException {
+    Mockito.when(mockSession.getAttribute("user")).thenReturn(null);
+
+    profileServlet.doPost(mockRequest, mockResponse);
+
+    Mockito.verify(mockMessageStore, Mockito.never()).addMessage(Mockito.any(Message.class));
+    Mockito.verify(mockResponse).sendRedirect("/login");
+  }
+
+  @Test
+  public void testDoPost_InvalidUser() throws IOException, ServletException {
+    Mockito.when(mockSession.getAttribute("user")).thenReturn("test_user");
+    Mockito.when(mockUserStore.getUser("test_user")).thenReturn(null);
+
+    profileServlet.doPost(mockRequest, mockResponse);
+
+    Mockito.verify(mockMessageStore, Mockito.never()).addMessage(Mockito.any(Message.class));
+    Mockito.verify(mockResponse).sendRedirect("/login");
   }
 }
