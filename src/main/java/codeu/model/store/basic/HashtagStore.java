@@ -23,11 +23,11 @@ import java.util.UUID;
 
 public class HashtagStore {
 
-  /** Singleton instance of ConversationStore. */
+  /** Singleton instance of HashtagStore. */
   private static HashtagStore instance;
 
   /**
-   * Returns the singleton instance of ConversationStore that should be shared between all servlet
+   * Returns the singleton instance of HashtagStore that should be shared between all servlet
    * classes. Do not call this function from a test; use getTestInstance() instead.
    */
   public static HashtagStore getInstance() {
