@@ -72,9 +72,13 @@ public class ProfileServletTest {
   public void testDoGet() throws IOException, ServletException {
 
     User fakeUser = new TestUserBuilder().withName("test_user").build();
+    String fakeLink = mockRequest.getRequestURI();
+    String fakeUsername = "test_user";
     Mockito.when(mockUserStore.getUser("test_user"))
         .thenReturn(fakeUser);
     Mockito.when(mockRequest.getRequestURI()).thenReturn("/users/test_user");
+    Mockito.when(fakeLink.substring("/users/".length()))
+        .thenReturn(fakeUsername);
 
     List<Message> fakeMessagesByUser = new ArrayList<>();
     fakeMessagesByUser.add(new TestMessageBuilder().withAuthorId(fakeUser.getId()).build());
@@ -84,13 +88,9 @@ public class ProfileServletTest {
     profileServlet.doGet(mockRequest, mockResponse);
 
     Mockito.verify(mockRequest).setAttribute("messagesByUser", fakeMessagesByUser);
+    Mockito.verify(mockRequest).setAttribute("username", fakeUsername);
     Mockito.verify(mockRequest).setAttribute("user", fakeUser);
     Mockito.verify(mockRequestDispatcher).forward(mockRequest, mockResponse);
-  }
-
-  /* Test to handle user requests to access a profile that it not theirs. */
-  @Test
-  public void testDoGet_wrongProfile() throws IOException, ServletException {
   }
 
   @Test
@@ -112,5 +112,35 @@ public class ProfileServletTest {
 
     Mockito.verify(mockMessageStore, Mockito.never()).addMessage(Mockito.any(Message.class));
     Mockito.verify(mockResponse).sendRedirect("/login");
+  }
+
+  /*
+   *  In this method, I want to test the clean by:
+   *    Creating the user and retrieving the "about me" getContent
+   *    Verifying the content does contain HTML
+   *    Passing content to ArgumentCaptor and pass argument to setAboutMe()
+   *    Cleaning the content and verifying it equals the original, minus HTML
+  */
+  @Test
+  public void testDoPost_CleansHtmlContent() throws IOException, ServletException {
+    Mockito.when(mockRequest.getRequestURI()).thenReturn("/users/test_user");
+    Mockito.when(mockSession.getAttribute("user")).thenReturn("test_user");
+
+    User fakeUser = new TestUserBuilder().withName("test_user").build();
+    Mockito.when(mockUserStore.getUser("test_user")).thenReturn(fakeUser);
+
+    Mockito.when(mockRequest.getParameter("About me"))
+        .thenReturn("Contains <b>html</b> and <script>JavaScript</script> content.");
+
+    profileServlet.doPost(mockRequest, mockResponse);
+
+    ArgumentCaptor<User> argument = ArgumentCaptor.forClass(User.class);
+    Mockito.verify(mockUserStore).setAboutMe(argument.capture());
+
+    /* Verify cleaned content matches the expected cleaned content. */
+    Assert.assertEquals(
+        "Contains html and  content.", argument.getValue().getContent());
+
+    Mockito.verify(mockResponse).sendRedirect("/users/test_user");
   }
 }
