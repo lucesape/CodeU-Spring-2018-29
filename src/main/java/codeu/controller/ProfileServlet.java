@@ -80,7 +80,7 @@ public class ProfileServlet extends HttpServlet {
       return;
     }
 
-    UUID userID = UserStore.getInstance().getUser(username).getId();
+    UUID userID = userStore.getUser(username).getId();
     if (userID == null) {
       // there is no user id, redirect to login page
       response.sendRedirect("/login");

@@ -72,7 +72,7 @@ public class ProfileServletTest {
   public void testDoGet() throws IOException, ServletException {
 
     User fakeUser = new TestUserBuilder().withName("test_user").build();
-    Mockito.when(mockUserStore.getUser(fakeUser.getId()))
+    Mockito.when(mockUserStore.getUser("test_user"))
         .thenReturn(fakeUser);
     Mockito.when(mockRequest.getRequestURI()).thenReturn("/users/test_user");
 
@@ -90,7 +90,7 @@ public class ProfileServletTest {
 
   /* Test to handle user requests to access a profile that it not theirs. */
   @Test
-  public void testDoGet_NotMyProfile() throws IOException, ServletException {
+  public void testDoGet_wrongProfile() throws IOException, ServletException {
   }
 
   @Test
