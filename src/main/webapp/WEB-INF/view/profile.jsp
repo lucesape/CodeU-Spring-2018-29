@@ -27,6 +27,7 @@
 <%@ page import="java.time.ZoneOffset" %>
 <%
 User user = (User) request.getAttribute("user");
+String referenced_user = (String) request.getAttribute("username");
 List<Message> messagesByUser = (List<Message>) request.getAttribute("messagesByUser");
 %>
 
@@ -75,24 +76,24 @@ List<Message> messagesByUser = (List<Message>) request.getAttribute("messagesByU
     <% } %>
 
     <% if (request.getSession().getAttribute("user") != null) { %>
-      <h1><%=request.getSession().getAttribute("user")%>'s Profile Page</h1>
+
+      <h1><%=referenced_user%>'s Profile Page</h1>
       <hr/>
-      <strong>About <%=request.getSession().getAttribute("user")%></strong><br>
+      <strong>About <%=referenced_user%></strong><br>
       <p><%=StyleText.style(user.getAboutMe())%></p>
       <form action="/users/<%=request.getSession().getAttribute("user") %>" method="POST">
 
+      <% if (request.getSession().getAttribute("user").equals(referenced_user)) { %>
         <div class="form-group">
           <label class="form-control-label">Edit Your About Me (Only you can see this):</label>
           <textarea rows="5" cols="120" name="About Me"></textarea>
         </div>
-
         <button type="submit">submit</button>
       </form>
-
       <hr/>
+      <% } %>
 
-      <h1><%=request.getSession().getAttribute("user")%>'s Sent Messages</h1>
-
+      <h1><%=referenced_user%>'s Sent Messages</h1>
       <div id="chat">
         <ul>
           <% for (Message message : messagesByUser) {
@@ -103,7 +104,6 @@ List<Message> messagesByUser = (List<Message>) request.getAttribute("messagesByU
           <% } %>
         </ul>
       </div>
-
       <hr/>
     <% } %>
   </div>

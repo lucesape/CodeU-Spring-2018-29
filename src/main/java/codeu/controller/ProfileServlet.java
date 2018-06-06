@@ -90,6 +90,7 @@ public class ProfileServlet extends HttpServlet {
     List<Message> messagesByUser = messageStore.getMessagesByUser(userID);
 
     request.setAttribute("messagesByUser", messagesByUser);
+    request.setAttribute("username", username);
     request.setAttribute("user", user);
     request.getRequestDispatcher("/WEB-INF/view/profile.jsp").forward(request, response);
   }
