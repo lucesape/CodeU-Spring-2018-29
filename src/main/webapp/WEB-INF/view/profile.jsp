@@ -94,7 +94,7 @@ List<Message> messagesByUser = (List<Message>) request.getAttribute("messagesByU
           </div>
           <button type="submit">submit</button>
         </form>
-      <hr/>
+        <hr/>
       <% } %>
 
       <h1><%=profile_owner%>'s Sent Messages</h1>
