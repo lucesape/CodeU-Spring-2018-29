@@ -75,9 +75,6 @@ public class ProfileServletTest {
     Mockito.when(mockUserStore.getUser("test_user"))
         .thenReturn(fakeUser);
 
-    String fakeUsername = "test_user";
-    Mockito.when(mockRequest.getAttribute("username")).thenReturn("test_user");
-
     List<Message> fakeMessagesByUser = new ArrayList<>();
     fakeMessagesByUser.add(new TestMessageBuilder().withAuthorId(fakeUser.getId()).build());
     Mockito.when(mockMessageStore.getMessagesByUser(fakeUser.getId()))
@@ -86,7 +83,7 @@ public class ProfileServletTest {
     profileServlet.doGet(mockRequest, mockResponse);
 
     Mockito.verify(mockRequest).setAttribute("messagesByUser", fakeMessagesByUser);
-    Mockito.verify(mockRequest).setAttribute("username", fakeUsername);
+    Mockito.verify(mockRequest).setAttribute("profile_owner", "test_user");
     Mockito.verify(mockRequest).setAttribute("user", fakeUser);
     Mockito.verify(mockRequestDispatcher).forward(mockRequest, mockResponse);
   }
@@ -114,10 +111,8 @@ public class ProfileServletTest {
 
   @Test
   public void testDoPost_CleansHtmlContent() throws IOException, ServletException {
-    Mockito.when(mockRequest.getSession()).thenReturn(mockSession);
     Mockito.when(mockRequest.getParameter("About Me"))
         .thenReturn("Contains <b>html</b> and <script>JavaScript</script> content.");
-    Mockito.when(mockRequest.getRequestURI()).thenReturn("/users/test_user");
     Mockito.when(mockSession.getAttribute("user")).thenReturn("test_user");
 
     User fakeUser = new TestUserBuilder().withName("test_user").build();
@@ -125,7 +120,8 @@ public class ProfileServletTest {
 
     profileServlet.doPost(mockRequest, mockResponse);
 
-    assert (mockUserStore.getUser("test_user").getAboutMe().equals("Contains html and  content."));
+    Assert.assertEquals(mockUserStore.getUser("test_user").getAboutMe(),
+        "Contains html and  content.");
     Mockito.verify(mockResponse).sendRedirect("/users/test_user");
   }
 }
