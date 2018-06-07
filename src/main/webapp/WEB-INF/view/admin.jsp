@@ -13,6 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 --%>
+<%@ page import="codeu.controller.AdminServlet" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -28,17 +29,17 @@
 
       <h1>Administration</h1>
       <p>
-        This is the administration page of the CodeU Chat App. Only the administrators of the site can view stats. 
+        This is the administration page of the CodeU Chat App. Only the administrators of the site can view stats. (Enjoy the authority!) 
       </p>
 
       <h2><strong>Site Statistics</strong></h2>
       <ul>
-        <li><strong>Total Users:</strong></li>
-        <li><strong>Total Conversations:</strong></li>
-        <li><strong>Total Messages:</strong></li>
-        <li><strong>Most Active User:</strong></li>
-        <li><strong>Newest User:</strong></li>
-        <li><strong>Wordiest User:</strong></li>
+        <li><strong>Total Users: </strong><%= request.getAttribute("totalUsers")%></li>
+        <li><strong>Total Conversations: </strong><%= request.getAttribute("totalConversations")%></li>
+        <li><strong>Total Messages: </strong><%= request.getAttribute("totalMessages")%></li>
+        <li><strong>Most Active User:</strong><%= request.getAttribute("mostActive")%></li>
+        <li><strong>Newest User:</strong><%= request.getAttribute("newestUser")%></li>
+        <li><strong>Wordiest User:</strong><%= request.getAttribute("wordiestUser")%></li>
       </ul>
       
     </div>
