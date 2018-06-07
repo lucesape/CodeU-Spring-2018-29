@@ -46,9 +46,7 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
   </script>
 </head>
 <body onload="scrollChat()">
-  <nav>
-    <%@ include file = "/navigations.jsp" %>
-  </nav>
+  <%@ include file = "/navigations.jsp" %>
 
   <div id="container">
 

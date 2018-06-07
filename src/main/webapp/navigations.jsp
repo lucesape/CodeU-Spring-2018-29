@@ -1,3 +1,4 @@
+<nav>
 <a id="navTitle" href="/">CodeByter's Chat App</a>
 <a href="/conversations">Conversations</a>
 <% if (request.getSession().getAttribute("user") != null) { %>
@@ -9,3 +10,4 @@
 <% } %>
 <a href="/activityfeed">ActivityFeed</a>
 <a href="/about.jsp">About</a>
+</nav>
