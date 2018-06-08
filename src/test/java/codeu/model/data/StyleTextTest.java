@@ -7,11 +7,12 @@ public class StyleTextTest {
 
   @Test
   public void testStyleText() {
-    String message = "this is a [b]test[/b] message";
+    String message = "Change messages to [b]bold[/b] [i]italics[/i] and [u]underlined[/u] text";
 
     String result = StyleText.style(message);
 
-    String expectedOutput = "this is a <b>test</b> message";
+    String expectedOutput =
+        "Change messages to <b>bold</b> <i>italics</i> and <u>underlined</u> text";
     Assert.assertEquals(expectedOutput, result);
   }
 }
