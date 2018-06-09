@@ -61,8 +61,10 @@ public class HashtagStore {
   }
 
   /** Add a new Hashtag to the current set of Hashtags known to the applications. */
-  public void addHashtag(UUID id, UUID ownerId, String content, Instant creation) {
-    Hashtag hashtag = new Hashtag(UUID.randomUUID(), UUID.randomUUID(), content, Instant.now());
+  public void addHashtag(
+      UUID id, UUID ownerId, String content, Instant creation, boolean createdFromUser) {
+    Hashtag hashtag =
+        new Hashtag(UUID.randomUUID(), UUID.randomUUID(), content, Instant.now(), createdFromUser);
     this.hashtags.add(hashtag);
     persistentStorageAgent.writeThrough(hashtag);
   }

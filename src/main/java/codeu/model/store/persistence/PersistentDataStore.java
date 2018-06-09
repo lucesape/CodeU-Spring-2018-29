@@ -163,7 +163,8 @@ public class PersistentDataStore {
         UUID authorUuid = UUID.fromString((String) entity.getProperty("author_uuid"));
         Instant creationTime = Instant.parse((String) entity.getProperty("creation_time"));
         String content = (String) entity.getProperty("content");
-        Hashtag hashtag = new Hashtag(uuid, authorUuid, content, creationTime);
+        Boolean createdFromUser = (Boolean) entity.getProperty("createdFromUser");
+        Hashtag hashtag = new Hashtag(uuid, authorUuid, content, creationTime, createdFromUser);
         hashtags.add(hashtag);
       } catch (Exception e) {
         // In a production environment, errors should be very rare. Errors which may
@@ -215,6 +216,7 @@ public class PersistentDataStore {
     conversationEntity.setProperty("owner_uuid", hashtag.getOwnerId().toString());
     conversationEntity.setProperty("content", hashtag.getContent());
     conversationEntity.setProperty("creation_time", hashtag.getCreationTime().toString());
+    conversationEntity.setProperty("createdFromUser", hashtag.isCreatedFromUser());
     datastore.put(conversationEntity);
   }
 }

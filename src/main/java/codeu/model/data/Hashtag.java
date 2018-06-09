@@ -24,13 +24,15 @@ public class Hashtag {
   private final UUID ownerId;
   private final Instant creation;
   private final String content;
+  private final Boolean createdFromUser;
 
   /** Constructs a new Hashtag. */
-  public Hashtag(UUID id, UUID ownerId, String content, Instant creation) {
+  public Hashtag(UUID id, UUID ownerId, String content, Instant creation, boolean createdFromUser) {
     this.id = id;
     this.ownerId = ownerId;
     this.content = content;
     this.creation = creation;
+    this.createdFromUser = createdFromUser;
   }
 
   /** Returns the ID of this Hashtag. */
@@ -38,7 +40,11 @@ public class Hashtag {
     return this.id;
   }
 
-  /** Returns the ID of the Owner of this Hashtag. */
+  /**
+   * Returns the ID of the Owner of this Hashtag. The ownerId refers to the ID of the User when
+   * createdFromUser is true; the ownerId refers to the ID of the conversation (not authorID of the
+   * conversation) when createdFromUser is false.
+   */
   public UUID getOwnerId() {
     return this.ownerId;
   }
@@ -51,5 +57,10 @@ public class Hashtag {
   /** Returns the content of this Hashtag. */
   public String getContent() {
     return this.content;
+  }
+
+  /** Returns if the Hashtag was added from the UserStore. */
+  public Boolean isCreatedFromUser() {
+    return this.createdFromUser;
   }
 }
