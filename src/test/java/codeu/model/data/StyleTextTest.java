@@ -48,7 +48,35 @@ public class StyleTextTest {
   }
   
   //Tags inside of tags? 
+  @Test
+  public void TagsInsideTagsOne() {
+	  String message = "[b]style [i]text [u]tags[/u] inside[/i] another[/b]";
+	  
+	  String actual = StyleText.style(message);
+	  
+	  String expected = "<b>style <i>text <u>tags</u> inside</i> another</b>";
+	  Assert.assertEquals(expected, actual);
+  }
   
+  @Test
+  public void TagsInsideTagsTwo() {
+	  String message = "[b]style [i]text [/i]tags[u] inside[/u] another[/b]";
+	  
+	  String actual = StyleText.style(message);
+	  
+	  String expected = "<b>style <i>text </i>tags<u> inside</u> another</b>";
+	  Assert.assertEquals(expected, actual);
+  }
+  
+  @Test
+  public void TagsInsideTagsThree() {
+	  String message = "start [b]style [i]text [/i]tags[u] inside[/u] another[/b] end";
+	  
+	  String actual = StyleText.style(message);
+	  
+	  String expected = "start <b>style <i>text </i>tags<u> inside</u> another</b> end";
+	  Assert.assertEquals(expected, actual);
+  }
   
   //Close tags before open tags? 
   
