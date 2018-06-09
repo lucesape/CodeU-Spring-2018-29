@@ -110,7 +110,25 @@ public class StyleTextTest {
   }
   
   //A bunch of open tags at the end of the string? 
+  @Test
+  public void OpenTagsAtEnd() {
+	  String message = "open tags at the end[u][i][b]";
+	  
+	  String actual = StyleText.style(message);
+	  
+	  String expected = "open tags at the end";
+	  Assert.assertEquals(expected, actual);
+  }
   
+  @Test
+  public void OpenTagsAtEndTwo() {
+	  String message = "open tags at the end[b][b][b]";
+	  
+	  String actual = StyleText.style(message);
+	  
+	  String expected = "open tags at the end";
+	  Assert.assertEquals(expected, actual);
+  }
   
   //Tags of different types that aren't properly nested? 
   
