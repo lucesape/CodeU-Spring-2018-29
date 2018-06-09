@@ -27,7 +27,7 @@ public class Hashtag {
   private final Boolean createdFromUser;
 
   /** Constructs a new Hashtag. */
-  public Hashtag(UUID id, UUID ownerId, String content, Instant creation, boolean createdFromUser) {
+  public Hashtag(UUID id, UUID ownerId, String content, Instant creation, Boolean createdFromUser) {
     this.id = id;
     this.ownerId = ownerId;
     this.content = content;
