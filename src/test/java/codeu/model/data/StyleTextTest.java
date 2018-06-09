@@ -79,7 +79,35 @@ public class StyleTextTest {
   }
   
   //Close tags before open tags? 
+  @Test
+  public void ClosedBeforeOpenOne() {
+	  String message = "closed tags[/b] before open tags [b]";
+	  
+	  String actual = StyleText.style(message);
+	  
+	  String expected = "closed tags before open tags ";
+	  Assert.assertEquals(expected, actual);
+  }
   
+  @Test
+  public void ClosedBeforeOpenTwo() {
+	  String message = "closed tags[/b] before[/b] open tags[b] twice[b]";
+	  
+	  String actual = StyleText.style(message);
+	  
+	  String expected = "closed tags before open tags twice";
+	  Assert.assertEquals(expected, actual);
+  }
+  
+  @Test
+  public void ClosedBeforeOpenThree() {
+	  String message = "closed tags[/b] before[/b] open tags[b] twice";
+	  
+	  String actual = StyleText.style(message);
+	  
+	  String expected = "closed tags before open tags twice";
+	  Assert.assertEquals(expected, actual);
+  }
   
   //A bunch of open tags at the end of the string? 
   
