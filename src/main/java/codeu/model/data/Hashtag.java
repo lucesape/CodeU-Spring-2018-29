@@ -59,6 +59,11 @@ public class Hashtag {
     return this.content;
   }
 
+  /** Returns true if created from user. */
+  public Boolean getCreatedFromUser() {
+    return this.createdFromUser;
+  }
+
   /** Returns if the Hashtag was added from the UserStore. */
   public Boolean isCreatedFromUser() {
     return this.createdFromUser;

@@ -160,7 +160,7 @@ public class PersistentDataStore {
     for (Entity entity : results.asIterable()) {
       try {
         UUID uuid = UUID.fromString((String) entity.getProperty("uuid"));
-        UUID authorUuid = UUID.fromString((String) entity.getProperty("author_uuid"));
+        UUID authorUuid = UUID.fromString((String) entity.getProperty("owner_uuid"));
         Instant creationTime = Instant.parse((String) entity.getProperty("creation_time"));
         String content = (String) entity.getProperty("content");
         Boolean createdFromUser = (Boolean) entity.getProperty("createdFromUser");

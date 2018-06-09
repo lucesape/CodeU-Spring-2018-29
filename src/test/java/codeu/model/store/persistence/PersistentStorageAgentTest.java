@@ -1,9 +1,11 @@
 package codeu.model.store.persistence;
 
 import codeu.model.data.Conversation;
+import codeu.model.data.Hashtag;
 import codeu.model.data.Message;
 import codeu.model.data.User;
 import java.time.Instant;
+import java.util.Random;
 import java.util.UUID;
 import org.junit.Before;
 import org.junit.Test;
@@ -45,6 +47,12 @@ public class PersistentStorageAgentTest {
   }
 
   @Test
+  public void testLoadHashtags() throws PersistentDataStoreException {
+    persistentStorageAgent.loadHashtags();
+    Mockito.verify(mockPersistentDataStore).loadHashtags();
+  }
+
+  @Test
   public void testWriteThroughUser() {
     User user =
         new User(
@@ -71,5 +79,15 @@ public class PersistentStorageAgentTest {
             UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), "test content", Instant.now());
     persistentStorageAgent.writeThrough(message);
     Mockito.verify(mockPersistentDataStore).writeThrough(message);
+  }
+
+  @Test
+  public void testWriteThroughHashtag() {
+    Hashtag hashtag =
+            new Hashtag(
+                    UUID.randomUUID(), UUID.randomUUID(),"soccer", Instant.now(), (new Random()).nextBoolean()
+            );
+    persistentStorageAgent.writeThrough(hashtag);
+    Mockito.verify(mockPersistentDataStore).writeThrough(hashtag);
   }
 }
