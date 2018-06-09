@@ -131,7 +131,15 @@ public class StyleTextTest {
   }
   
   //Tags of different types that aren't properly nested? 
-  
+  @Test
+  public void NestedTags() {
+	  String message = "tags[/b] of different [u]types [b]that are[/i] not nested[i][/u] properly";
+	  
+	  String actual = StyleText.style(message);
+	  
+	  String expected = "tags of different <u>types that are not nested</u> properly";
+	  Assert.assertEquals(expected, actual);
+  }
   
   //Tags with capital letters? 
   
