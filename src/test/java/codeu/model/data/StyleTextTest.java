@@ -163,6 +163,14 @@ public class StyleTextTest {
   }
   
   //Invalid tags?
-  
+  @Test
+  public void InvalidTags() {
+	  String message = "invalid tags [a]wont work [d]and print[/a] as it[/d] is";
+	  
+	  String actual = StyleText.style(message);
+	  
+	  String expected = "invalid tags [a]wont work [d]and print[/a] as it[/d] is";
+	  Assert.assertEquals(expected, actual);
+  }
   
 }
