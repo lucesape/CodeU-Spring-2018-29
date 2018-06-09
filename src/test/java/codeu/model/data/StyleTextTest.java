@@ -142,7 +142,25 @@ public class StyleTextTest {
   }
   
   //Tags with capital letters? 
+  @Test
+  public void CapitalLetterTags() {
+	  String message = "tags with [U]capital letters[/U]";
+	  
+	  String actual = StyleText.style(message);
+	  
+	  String expected = "tags with [U]capital letters[/U]";
+	  Assert.assertEquals(expected, actual);
+  }
   
+  @Test
+  public void CapitalLetterTagsTwo() {
+	  String message = "tags with [b]capital letters[/B]";
+	  
+	  String actual = StyleText.style(message);
+	  
+	  String expected = "tags with capital letters[/B]";
+	  Assert.assertEquals(expected, actual);
+  }
   
   //Invalid tags?
   
