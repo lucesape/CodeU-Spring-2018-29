@@ -17,8 +17,7 @@ package codeu.model.store.basic;
 import codeu.model.data.Hashtag;
 import codeu.model.store.persistence.PersistentStorageAgent;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Hashtable;
 import java.util.UUID;
 
 public class HashtagStore {
@@ -52,12 +51,12 @@ public class HashtagStore {
   private PersistentStorageAgent persistentStorageAgent;
 
   /** The in-memory list of Hashtags. */
-  private List<Hashtag> hashtags;
+  private Hashtable<String, Hashtag> hashtags;
 
   /** This class is a singleton, so its constructor is private. Call getInstance() instead. */
   private HashtagStore(PersistentStorageAgent persistentStorageAgent) {
     this.persistentStorageAgent = persistentStorageAgent;
-    hashtags = new ArrayList<>();
+    hashtags = new Hashtable<String, Hashtag>();
   }
 
   /** Add a new Hashtag to the current set of Hashtags known to the applications. */
@@ -65,7 +64,7 @@ public class HashtagStore {
       UUID id, UUID ownerId, String content, Instant creation, Boolean createdFromUser) {
     Hashtag hashtag =
         new Hashtag(UUID.randomUUID(), UUID.randomUUID(), content, Instant.now(), createdFromUser);
-    this.hashtags.add(hashtag);
+    this.hashtags.put(content.toLowerCase(), hashtag);
     persistentStorageAgent.writeThrough(hashtag);
   }
 }
