@@ -188,7 +188,7 @@ public class ModelDataTestHelpers {
     private Instant creationTime;
     private boolean admin;
     private String aboutMe;
-    
+
     private Random random = new Random();
 
     public TestUserBuilder() {
@@ -221,14 +221,14 @@ public class ModelDataTestHelpers {
     }
 
     public TestUserBuilder withAdmin(boolean admin) {
-        this.admin = admin;
-        return this;
-      }
+      this.admin = admin;
+      return this;
+    }
 
     public TestUserBuilder withAboutMe(String aboutMe) {
-        this.aboutMe = aboutMe;
-        return this;
-      }
+      this.aboutMe = aboutMe;
+      return this;
+    }
 
     public User build() {
       User user = new User(id, name, passwordHash, creationTime);
@@ -239,9 +239,9 @@ public class ModelDataTestHelpers {
   }
 
   /**
-   * Use this to create a fake Hashtag to use in a unit test. When created it contains random
-   * data in every field, and the individual methods can be used to set the test conditions. For
-   * example, if the test needs specific owner ID and title, then you could do:
+   * Use this to create a fake Hashtag to use in a unit test. When created it contains random data
+   * in every field, and the individual methods can be used to set the test conditions. For example,
+   * if the test needs specific owner ID and title, then you could do:
    *
    * <pre>{@code
    * UUID fakeOwner = UUID.randomUUID();

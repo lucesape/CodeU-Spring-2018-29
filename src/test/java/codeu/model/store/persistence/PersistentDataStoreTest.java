@@ -185,6 +185,5 @@ public class PersistentDataStoreTest {
     Assert.assertEquals(content1, resultHastagtwo.getContent());
     Assert.assertEquals(createdFromUser1, resultHastagtwo.getCreatedFromUser());
     Assert.assertEquals(creationOne, resultHastagtwo.getCreationTime());
-
   }
 }

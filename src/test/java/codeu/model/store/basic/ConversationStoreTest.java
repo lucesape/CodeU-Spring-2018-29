@@ -5,17 +5,15 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mockito;
-
 import codeu.model.data.Conversation;
 import codeu.model.data.ModelDataTestHelpers.TestConversationBuilder;
 import codeu.model.store.persistence.PersistentStorageAgent;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mockito;
 
 public class ConversationStoreTest {
 

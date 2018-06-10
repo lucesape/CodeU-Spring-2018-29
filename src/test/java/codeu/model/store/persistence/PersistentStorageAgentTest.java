@@ -84,9 +84,12 @@ public class PersistentStorageAgentTest {
   @Test
   public void testWriteThroughHashtag() {
     Hashtag hashtag =
-            new Hashtag(
-                    UUID.randomUUID(), UUID.randomUUID(),"soccer", Instant.now(), (new Random()).nextBoolean()
-            );
+        new Hashtag(
+            UUID.randomUUID(),
+            UUID.randomUUID(),
+            "soccer",
+            Instant.now(),
+            (new Random()).nextBoolean());
     persistentStorageAgent.writeThrough(hashtag);
     Mockito.verify(mockPersistentDataStore).writeThrough(hashtag);
   }
