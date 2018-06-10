@@ -64,7 +64,7 @@ public class Hashtag {
     return this.createdFromUser;
   }
 
-  /** Returns if the Hashtag was added from the UserStore. */
+  /** Returns true if the Hashtag was added from a User. */
   public Boolean isCreatedFromUser() {
     return this.createdFromUser;
   }
