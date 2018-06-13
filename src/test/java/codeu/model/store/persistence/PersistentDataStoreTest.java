@@ -176,14 +176,14 @@ public class PersistentDataStoreTest {
     Assert.assertEquals(idOne, resultHastagOne.getId());
     Assert.assertEquals(idOnwerOne, resultHastagOne.getOwnerId());
     Assert.assertEquals(content1, resultHastagOne.getContent());
-    Assert.assertEquals(createdFromUser1, resultHastagOne.getCreatedFromUser());
+    Assert.assertEquals(createdFromUser1, resultHastagOne.isCreatedFromUser());
     Assert.assertEquals(creationOne, resultHastagOne.getCreationTime());
 
     Hashtag resultHastagtwo = resultHashtags.get(0);
     Assert.assertEquals(idOne, resultHastagtwo.getId());
     Assert.assertEquals(idOnwerOne, resultHastagtwo.getOwnerId());
     Assert.assertEquals(content1, resultHastagtwo.getContent());
-    Assert.assertEquals(createdFromUser1, resultHastagtwo.getCreatedFromUser());
+    Assert.assertEquals(createdFromUser1, resultHastagtwo.isCreatedFromUser());
     Assert.assertEquals(creationOne, resultHastagtwo.getCreationTime());
   }
 }

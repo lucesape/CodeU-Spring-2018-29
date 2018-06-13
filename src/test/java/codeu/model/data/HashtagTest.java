@@ -20,7 +20,7 @@ public class HashtagTest {
     Assert.assertEquals(id, hashtag.getId());
     Assert.assertEquals(ownerId, hashtag.getOwnerId());
     Assert.assertEquals(content, hashtag.getContent());
-    Assert.assertEquals(createdFromUser, hashtag.getCreatedFromUser());
+    Assert.assertEquals(createdFromUser, hashtag.isCreatedFromUser());
     Assert.assertEquals(creation, hashtag.getCreationTime());
   }
 }
