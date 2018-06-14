@@ -67,4 +67,14 @@ public class HashtagStore {
     this.hashtags.put(content.toLowerCase(), hashtag);
     persistentStorageAgent.writeThrough(hashtag);
   }
+
+  /** Sets the List of Hashtags stored by this HashtagStore. */
+  public void setHashtags(List<Hashtag> hashtags) {
+    this.hashtags = hashtags;
+  }
+
+  /** Access the current set of hashtags known to the application. */
+  public List<Hashtag> getAllHashtags() {
+    return hashtags;
+  }
 }

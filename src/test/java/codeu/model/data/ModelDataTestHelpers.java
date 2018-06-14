@@ -188,7 +188,7 @@ public class ModelDataTestHelpers {
     private Instant creationTime;
     private boolean admin;
     private String aboutMe;
-    
+
     private Random random = new Random();
 
     public TestUserBuilder() {
@@ -221,20 +221,76 @@ public class ModelDataTestHelpers {
     }
 
     public TestUserBuilder withAdmin(boolean admin) {
-        this.admin = admin;
-        return this;
-      }
+      this.admin = admin;
+      return this;
+    }
 
     public TestUserBuilder withAboutMe(String aboutMe) {
-        this.aboutMe = aboutMe;
-        return this;
-      }
+      this.aboutMe = aboutMe;
+      return this;
+    }
 
     public User build() {
       User user = new User(id, name, passwordHash, creationTime);
       user.setAdmin(admin);
       user.setAboutMe(aboutMe);
       return user;
+    }
+  }
+
+  /**
+   * Use this to create a fake Hashtag to use in a unit test. When created it contains random data
+   * in every field, and the individual methods can be used to set the test conditions. For example,
+   * if the test needs specific owner ID and title, then you could do:
+   *
+   * <pre>{@code
+   * UUID fakeOwner = UUID.randomUUID();
+   * String fakeContent = "test content 1";
+   * Hashtag fakeHashtag = new TestHashtagBuilder().withOwnerId(fakeOwner).withContent(fakeContent).build();
+   * }</pre>
+   */
+  public static class TestHashtagBuilder {
+    private UUID id;
+    private UUID ownerId;
+    private String content;
+    private Instant creationTime;
+    private Boolean createdFromUser;
+
+    public TestHashtagBuilder() {
+      this.id = UUID.randomUUID();
+      this.ownerId = UUID.randomUUID();
+      this.content = UUID.randomUUID().toString();
+      this.creationTime = Instant.now();
+      this.createdFromUser = (new Random()).nextBoolean();
+    }
+
+    public TestHashtagBuilder withId(UUID id) {
+      this.id = id;
+      return this;
+    }
+
+    public TestHashtagBuilder withOwnerId(UUID ownerId) {
+      this.ownerId = ownerId;
+      return this;
+    }
+
+    public TestHashtagBuilder withContent(String content) {
+      this.content = content;
+      return this;
+    }
+
+    public TestHashtagBuilder withCreationTime(Instant creationTime) {
+      this.creationTime = creationTime;
+      return this;
+    }
+
+    public TestHashtagBuilder withCreatedFromUser(Boolean createdFromUser) {
+      this.createdFromUser = createdFromUser;
+      return this;
+    }
+
+    public Hashtag build() {
+      return new Hashtag(id, ownerId, content, creationTime, createdFromUser);
     }
   }
 }

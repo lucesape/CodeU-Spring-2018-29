@@ -4,20 +4,18 @@ import static codeu.model.data.ModelDataTestHelpers.assertMessageEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import codeu.model.data.Message;
+import codeu.model.data.ModelDataTestHelpers.TestMessageBuilder;
+import codeu.model.store.persistence.PersistentStorageAgent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
-
-import codeu.model.data.Message;
-import codeu.model.data.ModelDataTestHelpers.TestMessageBuilder;
-import codeu.model.store.persistence.PersistentStorageAgent;
 
 public class MessageStoreTest {
 
