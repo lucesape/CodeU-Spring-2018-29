@@ -205,7 +205,7 @@ public class ModelDataTestHelpers {
     private Instant creationTime;
     private boolean admin;
     private String aboutMe;
-    
+
     private Random random = new Random();
 
     public TestUserBuilder() {
@@ -238,14 +238,14 @@ public class ModelDataTestHelpers {
     }
 
     public TestUserBuilder withAdmin(boolean admin) {
-        this.admin = admin;
-        return this;
-      }
+      this.admin = admin;
+      return this;
+    }
 
     public TestUserBuilder withAboutMe(String aboutMe) {
-        this.aboutMe = aboutMe;
-        return this;
-      }
+      this.aboutMe = aboutMe;
+      return this;
+    }
 
     public User build() {
       User user = new User(id, name, passwordHash, creationTime);
@@ -253,72 +253,72 @@ public class ModelDataTestHelpers {
       user.setAboutMe(aboutMe);
       return user;
     }
+  }
 
-    /**
-     * Use this to create a fake Activity to use in a unit test. When created it contains random data
-     * in every field, and the individual methods can be used to set the test conditions. For example,
-     * if the test needs specific name, then you could do:
-     *
-     * <pre>{@code
-     * UUID fakeOwner = UUID.randomUUID();
-     * boolean isPublic = true;
-     * Activity fakeActivity = new TestActivityBuilder().withOwnerId(fakeOwner).withIsPublic(isPublic).build();
-     * }</pre>
-     */
-    public static class TestActivityBuilder {
-      private UUID id;
-      private UUID ownerId;
-      private Action action;
-      private boolean isPublic;
-      private Instant creationTime;
-      private String thumbnail;
+  /**
+   * Use this to create a fake Activity to use in a unit test. When created it contains random data
+   * in every field, and the individual methods can be used to set the test conditions. For example,
+   * if the test needs specific name, then you could do:
+   *
+   * <pre>{@code
+   * UUID fakeOwner = UUID.randomUUID();
+   * boolean isPublic = true;
+   * Activity fakeActivity = new TestActivityBuilder().withOwnerId(fakeOwner).withIsPublic(isPublic).build();
+   * }</pre>
+   */
+  public static class TestActivityBuilder {
+    private UUID id;
+    private UUID ownerId;
+    private Action action;
+    private boolean isPublic;
+    private Instant creationTime;
+    private String thumbnail;
 
-      private Random random = new Random();
+    private Random random = new Random();
 
-      public TestActivityBuilder() {
-        this.id = UUID.randomUUID();
-        this.ownerId = UUID.randomUUID();
-        this.isPublic = random.nextBoolean();
-        this.creationTime = Instant.now();
-        // default action: Registering_USER
-        this.action = Action.REGISTER_USER;
-        this.thumbnail = UUID.randomUUID().toString();
-      }
+    public TestActivityBuilder() {
+      this.id = UUID.randomUUID();
+      this.ownerId = UUID.randomUUID();
+      this.isPublic = random.nextBoolean();
+      this.creationTime = Instant.now();
+      // default action: Registering_USER
+      this.action = Action.REGISTER_USER;
+      this.thumbnail = UUID.randomUUID().toString();
+    }
 
-      public TestActivityBuilder withId(UUID id) {
-        this.id = id;
-        return this;
-      }
+    public TestActivityBuilder withId(UUID id) {
+      this.id = id;
+      return this;
+    }
 
-      public TestActivityBuilder withOwnerId(UUID ownerId) {
-        this.ownerId = ownerId;
-        return this;
-      }
+    public TestActivityBuilder withOwnerId(UUID ownerId) {
+      this.ownerId = ownerId;
+      return this;
+    }
 
-      public TestActivityBuilder withIsPublic(boolean isPublic) {
-        this.isPublic = isPublic;
-        return this;
-      }
+    public TestActivityBuilder withIsPublic(boolean isPublic) {
+      this.isPublic = isPublic;
+      return this;
+    }
 
-      public TestActivityBuilder withCreationTime(Instant creationTime) {
-        this.creationTime = creationTime;
-        return this;
-      }
+    public TestActivityBuilder withCreationTime(Instant creationTime) {
+      this.creationTime = creationTime;
+      return this;
+    }
 
-      public TestActivityBuilder withAction(Action action) {
-        this.action = action;
-        return this;
-      }
+    public TestActivityBuilder withAction(Action action) {
+      this.action = action;
+      return this;
+    }
 
-      public TestActivityBuilder withThumbnail(String thumbnail) {
-        this.thumbnail = thumbnail;
-        return this;
-      }
+    public TestActivityBuilder withThumbnail(String thumbnail) {
+      this.thumbnail = thumbnail;
+      return this;
+    }
 
-      public Activity build() {
-        Activity activity = new Activity(id, ownerId, action, isPublic, creationTime, thumbnail);
-        return activity;
-      }
+    public Activity build() {
+      Activity activity = new Activity(id, ownerId, action, isPublic, creationTime, thumbnail);
+      return activity;
     }
   }
 }
