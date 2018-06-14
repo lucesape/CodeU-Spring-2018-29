@@ -254,7 +254,7 @@ public class ModelDataTestHelpers {
       return user;
     }
   }
-
+  
   /**
    * Use this to create a fake Activity to use in a unit test. When created it contains random data
    * in every field, and the individual methods can be used to set the test conditions. For example,
@@ -273,7 +273,7 @@ public class ModelDataTestHelpers {
     private boolean isPublic;
     private Instant creationTime;
     private String thumbnail;
-
+    
     private Random random = new Random();
 
     public TestActivityBuilder() {
@@ -315,7 +315,7 @@ public class ModelDataTestHelpers {
       this.thumbnail = thumbnail;
       return this;
     }
-
+    
     public Activity build() {
       Activity activity = new Activity(id, ownerId, action, isPublic, creationTime, thumbnail);
       return activity;
