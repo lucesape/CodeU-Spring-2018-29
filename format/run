@@ -1,0 +1,57 @@
+#!/bin/bash
+
+NEWLINE=false
+# prints a new line if NEWLINE is true
+newline_if_necessary() {
+    if [ "$NEWLINE" = true ]; then
+        echo -ne "\n"
+    fi
+}
+
+# retrieve progress option based on wget support for the `--show-progress` flag
+wget --help | grep -q '\--show-progress' && \
+  _PROGRESS_OPT="-q --show-progress" || _PROGRESS_OPT=""
+
+mkdir -p $DIR/bin
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+# check for the Google Java formatter dependency
+if ! [ -f "$DIR/bin/google-java-format-1.6-all-deps.jar" ]; then
+    echo -e "Could not find Google Java formatter 1.6. Downloading...\n"
+    wget $_PROGRESS_OPT --directory-prefix=$DIR/bin https://github.com/google/google-java-format/releases/download/google-java-format-1.6/google-java-format-1.6-all-deps.jar
+    NEWLINE=true
+fi
+
+# check which set of files to be formatted based on arguments
+no_new_java_files=false
+
+if [ $# -gt 0 ]; then
+    # retrieve all files
+    java_files=$(find $DIR/../ -name "*.java")
+else
+    # retrieve files to be formatted via git diff
+    java_files=$(git diff --name-status --diff-filter=ACMRT |
+                 cut -f 2 |
+                 grep '\.java$')
+    if [ $? == 1 ]; then
+      no_new_java_files=true
+    fi
+fi 
+
+java_files=$(find $DIR/../ -name "*.java")
+
+# check if there are no files to be formatted
+if $no_new_java_files; then
+    newline_if_necessary
+    echo "No new files to be formatted!"
+    exit 1
+fi
+
+# run the formatter on all necessary files
+newline_if_necessary
+if ! $no_new_java_files; then
+    echo "FORMATTING JAVA..."
+    java -jar $DIR/bin/google-java-format-1.6-all-deps.jar -r $java_files
+fi
+
+echo "COMPLETE"
