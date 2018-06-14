@@ -69,12 +69,12 @@ public class HashtagStore {
   }
 
   /** Sets the List of Hashtags stored by this HashtagStore. */
-  public void setHashtags(List<Hashtag> hashtags) {
+  public void setHashtags(Hashtable<String, Hashtag> hashtags) {
     this.hashtags = hashtags;
   }
 
   /** Access the current set of hashtags known to the application. */
-  public List<Hashtag> getAllHashtags() {
+  public Hashtable<String, Hashtag> getAllHashtags() {
     return hashtags;
   }
 }
