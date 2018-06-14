@@ -3,9 +3,7 @@ package codeu.model.store.basic;
 import codeu.model.data.Hashtag;
 import codeu.model.data.ModelDataTestHelpers;
 import codeu.model.store.persistence.PersistentStorageAgent;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.Hashtable;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,12 +16,12 @@ public class HashtagStoreTest {
   @Before
   public void setup() {
     mockPersistentStorageAgent = Mockito.mock(PersistentStorageAgent.class);
-    hashtagStore = hashtagStore.getTestInstance(mockPersistentStorageAgent);
+    hashtagStore = HashtagStore.getTestInstance(mockPersistentStorageAgent);
   }
 
   @Test
   public void testAddHashtag() {
-    final List<Hashtag> hashtags = new ArrayList<>();
+    final Hashtable<String, Hashtag> hashtags = new Hashtable<String, Hashtag>();
 
     final Hashtag hash1 =
         new ModelDataTestHelpers.TestHashtagBuilder().withContent("Soccer").build();
@@ -31,12 +29,12 @@ public class HashtagStoreTest {
     final Hashtag hash3 =
         new ModelDataTestHelpers.TestHashtagBuilder().withCreatedFromUser(true).build();
 
-    hashtags.add(hash1);
-    hashtags.add(hash2);
-    hashtags.add(hash3);
-    hashtagStore.setHashtags(Arrays.asList(hash1, hash2, hash3));
+    hashtags.put(hash1.getContent(), hash1);
+    hashtags.put(hash2.getContent(), hash2);
+    hashtags.put(hash3.getContent(), hash3);
+    hashtagStore.setHashtags(hashtags);
 
-    List<Hashtag> resultHashtags = hashtagStore.getAllHashtags();
+    Hashtable<String, Hashtag> resultHashtags = hashtagStore.getAllHashtags();
 
     Assert.assertEquals(hashtags, resultHashtags);
   }
