@@ -71,11 +71,15 @@ public class ModelDataTestHelpers {
    * data in every field, and the individual methods can be used to set the test conditions. For
    * example, if the test needs specific owner ID and title, then you could do:
    *
-   * <pre>{@code
-   * UUID fakeOwner = UUID.randomUUID();
-   * String fakeTitle = "test title 1";
-   * Conversation fakeConversation = new TestConversationBuilder().withOwnerId(fakeOwner).withTitle(fakeTitle).build();
-   * }</pre>
+   * <pre>
+   * {
+   * 	&#64;code
+   * 	UUID fakeOwner = UUID.randomUUID();
+   * 	String fakeTitle = "test title 1";
+   * 	Conversation fakeConversation = new TestConversationBuilder().withOwnerId(fakeOwner).withTitle(fakeTitle)
+   * 			.build();
+   * }
+   * </pre>
    */
   public static class TestConversationBuilder {
     private UUID id;
@@ -120,11 +124,14 @@ public class ModelDataTestHelpers {
    * in every field, and the individual methods can be used to set the test conditions. For example,
    * if the test needs specific author ID and content, then you could do:
    *
-   * <pre>{@code
-   * UUID fakeAuthor = UUID.randomUUID();
-   * String fakeContent = "test message 1";
-   * Message fakeMessage = new TestMessageBuilder().withAuthorId(fakeAuthor).withContent(fakeContent).build();
-   * }</pre>
+   * <pre>
+   * {
+   * 	&#64;code
+   * 	UUID fakeAuthor = UUID.randomUUID();
+   * 	String fakeContent = "test message 1";
+   * 	Message fakeMessage = new TestMessageBuilder().withAuthorId(fakeAuthor).withContent(fakeContent).build();
+   * }
+   * </pre>
    */
   public static class TestMessageBuilder {
     private UUID id;
@@ -176,10 +183,13 @@ public class ModelDataTestHelpers {
    * every field, and the individual methods can be used to set the test conditions. For example, if
    * the test needs specific name, then you could do:
    *
-   * <pre>{@code
-   * String fakeName = "Alex Smith";
-   * User fakeUser = new TestUserBuilder().withName(fakeName).build();
-   * }</pre>
+   * <pre>
+   * {
+   * 	&#64;code
+   * 	String fakeName = "Alex Smith";
+   * 	User fakeUser = new TestUserBuilder().withName(fakeName).build();
+   * }
+   * </pre>
    */
   public static class TestUserBuilder {
     private UUID id;
@@ -243,35 +253,20 @@ public class ModelDataTestHelpers {
    * in every field, and the individual methods can be used to set the test conditions. For example,
    * if the test needs specific owner ID and title, then you could do:
    *
-   * <pre>{@code
-   * UUID fakeOwner = UUID.randomUUID();
-   * String fakeContent = "test content 1";
-   * Hashtag fakeHashtag = new TestHashtagBuilder().withOwnerId(fakeOwner).withContent(fakeContent).build();
-   * }</pre>
+   * <pre>
+   * {
+   * 	&#64;code
+   * 	UUID fakeOwner = UUID.randomUUID();
+   * 	String fakeContent = "test content 1";
+   * 	Hashtag fakeHashtag = new TestHashtagBuilder().withOwnerId(fakeOwner).withContent(fakeContent).build();
+   * }
+   * </pre>
    */
   public static class TestHashtagBuilder {
-    private UUID id;
-    private UUID ownerId;
     private String content;
-    private Instant creationTime;
-    private Boolean createdFromUser;
 
     public TestHashtagBuilder() {
-      this.id = UUID.randomUUID();
-      this.ownerId = UUID.randomUUID();
-      this.content = UUID.randomUUID().toString();
-      this.creationTime = Instant.now();
-      this.createdFromUser = (new Random()).nextBoolean();
-    }
-
-    public TestHashtagBuilder withId(UUID id) {
-      this.id = id;
-      return this;
-    }
-
-    public TestHashtagBuilder withOwnerId(UUID ownerId) {
-      this.ownerId = ownerId;
-      return this;
+      this.content = "TestingString".toLowerCase();
     }
 
     public TestHashtagBuilder withContent(String content) {
@@ -279,18 +274,8 @@ public class ModelDataTestHelpers {
       return this;
     }
 
-    public TestHashtagBuilder withCreationTime(Instant creationTime) {
-      this.creationTime = creationTime;
-      return this;
-    }
-
-    public TestHashtagBuilder withCreatedFromUser(Boolean createdFromUser) {
-      this.createdFromUser = createdFromUser;
-      return this;
-    }
-
     public Hashtag build() {
-      return new Hashtag(id, ownerId, content, creationTime, createdFromUser);
+      return new Hashtag(content);
     }
   }
 }

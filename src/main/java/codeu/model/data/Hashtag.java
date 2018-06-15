@@ -15,38 +15,31 @@
 package codeu.model.data;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
-/** Class representing a hashtag. */
+/** Class representing a HSashtag. */
 public class Hashtag {
 
   private final UUID id;
-  private final UUID ownerId;
-  private final Instant creation;
   private final String content;
-  private final Boolean createdFromUser;
+  private List<String> userSource;
+  private List<String> conversationSource;
+  private final Instant creation;
 
   /** Constructs a new Hashtag. */
-  public Hashtag(UUID id, UUID ownerId, String content, Instant creation, Boolean createdFromUser) {
-    this.id = id;
-    this.ownerId = ownerId;
-    this.content = content;
-    this.creation = creation;
-    this.createdFromUser = createdFromUser;
+  public Hashtag(String content) {
+    this.id = UUID.randomUUID();
+    this.content = content.toLowerCase();
+    this.creation = Instant.now();
+    this.userSource = new ArrayList<String>();
+    this.conversationSource = new ArrayList<String>();
   }
 
   /** Returns the ID of this Hashtag. */
   public UUID getId() {
     return this.id;
-  }
-
-  /**
-   * Returns the ID of the Owner of this Hashtag. The ownerId refers to the ID of the User when
-   * createdFromUser is true; the ownerId refers to the ID of the conversation (not authorID of the
-   * conversation) when createdFromUser is false.
-   */
-  public UUID getOwnerId() {
-    return this.ownerId;
   }
 
   /** Returns the creation time of this Hashtag. */
@@ -59,8 +52,38 @@ public class Hashtag {
     return this.content;
   }
 
-  /** Returns true if the Hashtag was added from a User. */
-  public Boolean isCreatedFromUser() {
-    return this.createdFromUser;
+  /** Returns the String representation of the users that contain this Hashtag. */
+  public String getUserSource() {
+    return String.join(",", this.userSource);
+  }
+
+  /** Returns the String representation of the conversations that contain this Hashtag. */
+  public String getConversationSource() {
+    return String.join(",", this.conversationSource);
+  }
+
+  /**
+   * Add the ID of the user to the userSource. Returns true if the String representation of the User
+   * is added; returns false if the String representation of the User exists.
+   */
+  public boolean addUser(UUID userID) {
+    if (userSource.contains(userID.toString())) {
+      return false;
+    }
+    this.userSource.add(userID.toString());
+    return true;
+  }
+
+  /**
+   * Add the ID of the conversation to the conversationSource. Returns true if the String
+   * representation of the conversation is added; returns false if the String representation of the
+   * conversation exists.
+   */
+  public boolean addConversation(UUID convID) {
+    if (conversationSource.contains(convID.toString())) {
+      return false;
+    }
+    this.conversationSource.add(convID.toString());
+    return true;
   }
 }

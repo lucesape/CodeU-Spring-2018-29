@@ -18,6 +18,7 @@ import codeu.model.data.Conversation;
 import codeu.model.data.Hashtag;
 import codeu.model.data.Message;
 import codeu.model.data.User;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -89,7 +90,7 @@ public class PersistentStorageAgent {
     return persistentDataStore.loadMessages();
   }
 
-  public List<Hashtag> loadHashtags() throws PersistentDataStoreException {
+  public HashMap<String, Hashtag> loadHashtags() throws PersistentDataStoreException {
     return persistentDataStore.loadHashtags();
   }
 

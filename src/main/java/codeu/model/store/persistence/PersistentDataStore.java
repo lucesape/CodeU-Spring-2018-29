@@ -26,6 +26,7 @@ import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -70,8 +71,10 @@ public class PersistentDataStore {
         User user = new User(uuid, userName, passwordHash, creationTime);
         users.add(user);
       } catch (Exception e) {
-        // In a production environment, errors should be very rare. Errors which may
-        // occur include network errors, Datastore service errors, authorization errors,
+        // In a production environment, errors should be very rare.
+        // Errors which may
+        // occur include network errors, Datastore service errors,
+        // authorization errors,
         // database entity definition mismatches, or service mismatches.
         throw new PersistentDataStoreException(e);
       }
@@ -104,8 +107,10 @@ public class PersistentDataStore {
         Conversation conversation = new Conversation(uuid, ownerUuid, title, creationTime);
         conversations.add(conversation);
       } catch (Exception e) {
-        // In a production environment, errors should be very rare. Errors which may
-        // occur include network errors, Datastore service errors, authorization errors,
+        // In a production environment, errors should be very rare.
+        // Errors which may
+        // occur include network errors, Datastore service errors,
+        // authorization errors,
         // database entity definition mismatches, or service mismatches.
         throw new PersistentDataStoreException(e);
       }
@@ -139,8 +144,10 @@ public class PersistentDataStore {
         Message message = new Message(uuid, conversationUuid, authorUuid, content, creationTime);
         messages.add(message);
       } catch (Exception e) {
-        // In a production environment, errors should be very rare. Errors which may
-        // occur include network errors, Datastore service errors, authorization errors,
+        // In a production environment, errors should be very rare.
+        // Errors which may
+        // occur include network errors, Datastore service errors,
+        // authorization errors,
         // database entity definition mismatches, or service mismatches.
         throw new PersistentDataStoreException(e);
       }
@@ -149,9 +156,9 @@ public class PersistentDataStore {
     return messages;
   }
 
-  public List<Hashtag> loadHashtags() throws PersistentDataStoreException {
+  public HashMap<String, Hashtag> loadHashtags() throws PersistentDataStoreException {
 
-    List<Hashtag> hashtags = new ArrayList<>();
+    HashMap<String, Hashtag> hashtags = new HashMap<String, Hashtag>();
 
     // Retrieve all hashtags from the datastore.
     Query query = new Query("chat-hashtags").addSort("creation_time", SortDirection.ASCENDING);
@@ -159,16 +166,14 @@ public class PersistentDataStore {
 
     for (Entity entity : results.asIterable()) {
       try {
-        UUID uuid = UUID.fromString((String) entity.getProperty("uuid"));
-        UUID authorUuid = UUID.fromString((String) entity.getProperty("owner_uuid"));
-        Instant creationTime = Instant.parse((String) entity.getProperty("creation_time"));
         String content = (String) entity.getProperty("content");
-        Boolean createdFromUser = (Boolean) entity.getProperty("createdFromUser");
-        Hashtag hashtag = new Hashtag(uuid, authorUuid, content, creationTime, createdFromUser);
-        hashtags.add(hashtag);
+        Hashtag hashtag = new Hashtag(content);
+        hashtags.put(content.toLowerCase(), hashtag);
       } catch (Exception e) {
-        // In a production environment, errors should be very rare. Errors which may
-        // occur include network errors, Datastore service errors, authorization errors,
+        // In a production environment, errors should be very rare.
+        // Errors which may
+        // occur include network errors, Datastore service errors,
+        // authorization errors,
         // database entity definition mismatches, or service mismatches.
         throw new PersistentDataStoreException(e);
       }
@@ -213,10 +218,10 @@ public class PersistentDataStore {
   public void writeThrough(Hashtag hashtag) {
     Entity conversationEntity = new Entity("chat-hashtags", hashtag.getId().toString());
     conversationEntity.setProperty("uuid", hashtag.getId().toString());
-    conversationEntity.setProperty("owner_uuid", hashtag.getOwnerId().toString());
     conversationEntity.setProperty("content", hashtag.getContent());
     conversationEntity.setProperty("creation_time", hashtag.getCreationTime().toString());
-    conversationEntity.setProperty("createdFromUser", hashtag.isCreatedFromUser());
+    conversationEntity.setProperty("user_source", hashtag.getUserSource());
+    conversationEntity.setProperty("conv_source", hashtag.getConversationSource());
     datastore.put(conversationEntity);
   }
 }

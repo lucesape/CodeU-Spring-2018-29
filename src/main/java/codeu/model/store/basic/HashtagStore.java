@@ -15,9 +15,9 @@
 package codeu.model.store.basic;
 
 import codeu.model.data.Hashtag;
+import codeu.model.data.HashtagCreator;
 import codeu.model.store.persistence.PersistentStorageAgent;
-import java.time.Instant;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.UUID;
 
 public class HashtagStore {
@@ -26,7 +26,7 @@ public class HashtagStore {
   private static HashtagStore instance;
 
   /**
-   * Returns the singleton instance of HashtagStore that should be shared between all servlet
+   * Returns the singleton instance of HashtagStore that should be shared between all Servlet
    * classes. Do not call this function from a test; use getTestInstance() instead.
    */
   public static HashtagStore getInstance() {
@@ -51,30 +51,45 @@ public class HashtagStore {
   private PersistentStorageAgent persistentStorageAgent;
 
   /** The in-memory list of Hashtags. */
-  private Hashtable<String, Hashtag> hashtags;
+  private HashMap<String, Hashtag> map;
 
   /** This class is a singleton, so its constructor is private. Call getInstance() instead. */
   private HashtagStore(PersistentStorageAgent persistentStorageAgent) {
     this.persistentStorageAgent = persistentStorageAgent;
-    hashtags = new Hashtable<String, Hashtag>();
+    map = new HashMap<String, Hashtag>();
   }
 
-  /** Add a new Hashtag to the current set of Hashtags known to the applications. */
-  public void addHashtag(
-      UUID id, UUID ownerId, String content, Instant creation, Boolean createdFromUser) {
-    Hashtag hashtag =
-        new Hashtag(UUID.randomUUID(), UUID.randomUUID(), content, Instant.now(), createdFromUser);
-    this.hashtags.put(content.toLowerCase(), hashtag);
+  /**
+   * Add a new Hashtag to the current set of Hashtags known to the applications. The UUID, id,
+   * represents either the ID of the user or the ID of the conversation.
+   *
+   * <p>Precondition: content should not contain any symbols, the case of the content does not
+   * matter.
+   */
+  public void addHashtag(String content, HashtagCreator creator, UUID id) {
+    content = content.toLowerCase();
+    Hashtag hashtag;
+    // If the content already exist in the map:
+    if (map.containsKey(content)) {
+      hashtag = map.get(content);
+    }
+    // If the content does not exist in the map:
+    else {
+      hashtag = new Hashtag(content);
+    }
+    if (creator == HashtagCreator.USER) hashtag.addUser(id);
+    else if (creator == HashtagCreator.CONVERSATION) hashtag.addConversation(id);
+    this.map.put(content, hashtag);
     persistentStorageAgent.writeThrough(hashtag);
   }
 
-  /** Sets the List of Hashtags stored by this HashtagStore. */
-  public void setHashtags(Hashtable<String, Hashtag> hashtags) {
-    this.hashtags = hashtags;
+  /** Sets the HashMap of Hashtags stored by this HashtagStore based on the input HashMap. */
+  public void setHashtags(HashMap<String, Hashtag> map) {
+    this.map = map;
   }
 
-  /** Access the current set of hashtags known to the application. */
-  public Hashtable<String, Hashtag> getAllHashtags() {
-    return hashtags;
+  /** Access the current set of Hashtags known to the application. */
+  public HashMap<String, Hashtag> getAllHashtags() {
+    return map;
   }
 }
