@@ -44,7 +44,7 @@ public class ActivityTest {
     assertEquals("CREATE_CONV", activity.getAction().name());
     assertTrue(!activity.isPublic());
     String time =
-            Util.DateTimeFormatter(c.getCreationTime())
+            Util.FormatDateTime(c.getCreationTime())
                     + ": [USER] created a new public conversation = \""
                     + c.getTitle()
                     + "\".";

@@ -51,7 +51,7 @@ List<Activity> activities = (List<Activity>) request.getAttribute("activities");
                   Action action = activity.getAction();
                   UUID id = activity.getId();
                   UUID idOwnerId = activity.getOwnerId();
-                  String time = Util.DateTimeFormatter(activity.getCreationTime());
+                  String time = Util.FormatDateTime(activity.getCreationTime());
                   if(action == Action.REGISTER_USER){
                       String name = UserStore.getInstance().getUser(id).getName();%>
                       <li><b><%= time %>:</b> <%= name %> joined CodeByters!</li>

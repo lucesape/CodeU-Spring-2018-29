@@ -87,7 +87,7 @@ List<Message> messagesByUser = (List<Message>) request.getAttribute("messagesByU
         <ul>
           <% for (Message message : messagesByUser) {
             Instant time = message.getCreationTime();
-            String creation = Util.DateTimeFormatter(time);
+            String creation = Util.FormatDateTime(time);
           %>
             <li><strong><%= creation %>:</strong> <%= StyleText.style(message.getContent()) %></li>
           <% } %>
