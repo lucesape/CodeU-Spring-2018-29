@@ -19,9 +19,8 @@ import codeu.model.data.User;
 import codeu.model.store.basic.MessageStore;
 import codeu.model.store.basic.UserStore;
 import java.io.IOException;
-
-import java.util.UUID;
 import java.util.List;
+import java.util.UUID;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -106,7 +105,7 @@ public class ProfileServlet extends HttpServlet {
     String username = (String) request.getSession().getAttribute("user");
     if (username == null) {
       // user is not logged in, redirect to login page
-      response.sendRedirect("/loSgin");
+      response.sendRedirect("/login");
       return;
     }
 
@@ -118,7 +117,7 @@ public class ProfileServlet extends HttpServlet {
     }
 
     String aboutMeContent = request.getParameter("About Me");
-    
+
     // this removes any HTML from the content
     String cleanedAboutMeContent = Jsoup.clean(aboutMeContent, Whitelist.none());
 

@@ -7,6 +7,7 @@ import codeu.model.data.User;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import org.junit.After;
@@ -150,40 +151,23 @@ public class PersistentDataStoreTest {
 
   @Test
   public void testSaveAndLoadHashtags() throws PersistentDataStoreException {
-    UUID idOne = UUID.fromString("10000000-2222-3333-4444-555555555555");
-    UUID idOnwerOne = UUID.fromString("10000000-2222-3333-3333-555555555555");
     String content1 = "soccer";
-    Instant creationOne = Instant.ofEpochMilli(1000);
-    Boolean createdFromUser1 = false;
-    Hashtag inputHashOne = new Hashtag(idOne, idOnwerOne, content1, creationOne, createdFromUser1);
-
-    UUID idTwo = UUID.fromString("20000000-2222-3333-4444-555555555555");
-    UUID idOnwerTwo = UUID.fromString("20000000-2222-3333-3333-555555555555");
+    Hashtag inputHashOne = new Hashtag(content1);
     String content2 = "football";
-    Instant creationTwo = Instant.ofEpochMilli(1000);
-    Boolean createdFromUser2 = false;
-    Hashtag inputHashTwo = new Hashtag(idTwo, idOnwerTwo, content2, creationTwo, createdFromUser2);
+    Hashtag inputHashTwo = new Hashtag(content2);
 
     // save
     persistentDataStore.writeThrough(inputHashOne);
     persistentDataStore.writeThrough(inputHashTwo);
 
     // load
-    List<Hashtag> resultHashtags = persistentDataStore.loadHashtags();
+    HashMap<String, Hashtag> resultHashtags = persistentDataStore.loadHashtags();
 
     // confirm that what we saved matches what we loaded
-    Hashtag resultHastagOne = resultHashtags.get(0);
-    Assert.assertEquals(idOne, resultHastagOne.getId());
-    Assert.assertEquals(idOnwerOne, resultHastagOne.getOwnerId());
+    Hashtag resultHastagOne = resultHashtags.get(content1);
     Assert.assertEquals(content1, resultHastagOne.getContent());
-    Assert.assertEquals(createdFromUser1, resultHastagOne.isCreatedFromUser());
-    Assert.assertEquals(creationOne, resultHastagOne.getCreationTime());
 
-    Hashtag resultHastagtwo = resultHashtags.get(0);
-    Assert.assertEquals(idOne, resultHastagtwo.getId());
-    Assert.assertEquals(idOnwerOne, resultHastagtwo.getOwnerId());
-    Assert.assertEquals(content1, resultHastagtwo.getContent());
-    Assert.assertEquals(createdFromUser1, resultHastagtwo.isCreatedFromUser());
-    Assert.assertEquals(creationOne, resultHastagtwo.getCreationTime());
+    Hashtag resultHastagtwo = resultHashtags.get(content2);
+    Assert.assertEquals(content2, resultHastagtwo.getContent());
   }
 }
