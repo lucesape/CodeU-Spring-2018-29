@@ -44,7 +44,7 @@ public class Activity {
             Action.REGISTER_USER,
             true,
             u.getCreationTime(),
-            Util.DateTimeFormatter(u.getCreationTime())+ ": "
+            Util.FormatDateTime(u.getCreationTime())+ ": "
                     + u.getName()
                     + " joined CodeByters!");
   }
@@ -56,7 +56,7 @@ public class Activity {
             Action.CREATE_CONV,
             true,
             c.getCreationTime(),
-            Util.DateTimeFormatter(c.getCreationTime())
+            Util.FormatDateTime(c.getCreationTime())
                     + ": [USER] created a new public conversation = \""
                     + c.getTitle()
                     + "\".");
@@ -69,7 +69,7 @@ public class Activity {
             Action.SEND_MESSAGE,
             true,
             m.getCreationTime(),
-            Util.DateTimeFormatter(m.getCreationTime())
+            Util.FormatDateTime(m.getCreationTime())
                     + ": [USER] sent a message in [Conversation]: "
                     + m.getContent()
                     + ".");
