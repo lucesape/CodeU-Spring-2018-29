@@ -5,6 +5,7 @@ import codeu.model.data.Hashtag;
 import codeu.model.data.Message;
 import codeu.model.data.User;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.UUID;
 import org.junit.Before;
 import org.junit.Test;
@@ -82,7 +83,13 @@ public class PersistentStorageAgentTest {
 
   @Test
   public void testWriteThroughHashtag() {
-    Hashtag hashtag = new Hashtag("soccer");
+    Hashtag hashtag =
+        new Hashtag(
+            UUID.randomUUID(),
+            "soccer",
+            Instant.now(),
+            new ArrayList<String>(),
+            new ArrayList<String>());
     persistentStorageAgent.writeThrough(hashtag);
     Mockito.verify(mockPersistentDataStore).writeThrough(hashtag);
   }

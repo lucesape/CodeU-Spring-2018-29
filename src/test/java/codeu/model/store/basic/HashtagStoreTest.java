@@ -1,5 +1,7 @@
 package codeu.model.store.basic;
 
+import static codeu.model.data.ModelDataTestHelpers.assertHashtagEquals;
+
 import codeu.model.data.Hashtag;
 import codeu.model.data.HashtagCreator;
 import codeu.model.data.ModelDataTestHelpers;
@@ -52,16 +54,12 @@ public class HashtagStoreTest {
     hashtags.put(hash1.getContent(), hash1);
     hashtags.put(hash2.getContent(), hash2);
 
-    hashtagStore.addHashtag(hash1.getContent(), HashtagCreator.USER, user1);
-    hashtagStore.addHashtag(hash2.getContent(), HashtagCreator.USER, user2);
+    hashtagStore.addHashtag(hash1, HashtagCreator.USER, user1);
+    hashtagStore.addHashtag(hash2, HashtagCreator.USER, user2);
 
     HashMap<String, Hashtag> resultHashtags = hashtagStore.getAllHashtags();
-    Assert.assertEquals(
-        hashtags.get(hash1.getContent()).getUserSource(),
-        resultHashtags.get(hash1.getContent()).getUserSource());
-    Assert.assertEquals(
-        hashtags.get(hash2.getContent()).getUserSource(),
-        resultHashtags.get(hash2.getContent()).getUserSource());
+    assertHashtagEquals(hashtags.get(hash1.getContent()), resultHashtags.get(hash1.getContent()));
+    assertHashtagEquals(hashtags.get(hash2.getContent()), resultHashtags.get(hash2.getContent()));
   }
 
   @Test
@@ -76,12 +74,10 @@ public class HashtagStoreTest {
 
     hashtags.put(hash1.getContent(), hash1);
 
-    hashtagStore.addHashtag(hash1.getContent(), HashtagCreator.USER, user1);
-    hashtagStore.addHashtag(hash1.getContent(), HashtagCreator.USER, user2);
+    hashtagStore.addHashtag(hash1, HashtagCreator.USER, user1);
+    hashtagStore.addHashtag(hash1, HashtagCreator.USER, user2);
 
     HashMap<String, Hashtag> resultHashtags = hashtagStore.getAllHashtags();
-    Assert.assertEquals(
-        hashtags.get(hash1.getContent()).getUserSource(),
-        resultHashtags.get(hash1.getContent()).getUserSource());
+    assertHashtagEquals(hashtags.get(hash1.getContent()), resultHashtags.get(hash1.getContent()));
   }
 }

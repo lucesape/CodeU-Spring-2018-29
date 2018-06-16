@@ -19,6 +19,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.UUID;
 
@@ -63,6 +64,20 @@ public class ModelDataTestHelpers {
       assertEquals(expected.getCreationTime(), actual.getCreationTime());
       assertEquals(expected.isAdmin(), actual.isAdmin());
       assertEquals(expected.getAboutMe(), actual.getAboutMe());
+    }
+  }
+
+  /** Asserts that all fields on both Hashtags are the same. */
+  public static void assertHashtagEquals(Hashtag expected, Hashtag actual) {
+    if (expected == null) {
+      assertNull(actual);
+    } else {
+      assertNotNull("Hashtag not found", actual);
+      assertEquals(expected.getId(), actual.getId());
+      assertEquals(expected.getCreationTime(), actual.getCreationTime());
+      assertEquals(expected.getContent(), actual.getContent());
+      assertEquals(expected.getConversationSource(), actual.getConversationSource());
+      assertEquals(expected.getUserSource(), actual.getUserSource());
     }
   }
 
@@ -256,17 +271,29 @@ public class ModelDataTestHelpers {
    * <pre>
    * {
    * 	&#64;code
-   * 	UUID fakeOwner = UUID.randomUUID();
    * 	String fakeContent = "test content 1";
-   * 	Hashtag fakeHashtag = new TestHashtagBuilder().withOwnerId(fakeOwner).withContent(fakeContent).build();
+   * 	Hashtag fakeHashtag = new TestHashtagBuilder().withContent(fakeContent).build();
    * }
    * </pre>
    */
   public static class TestHashtagBuilder {
+    private UUID id;
     private String content;
+    private Instant creationTime;
+    private ArrayList<String> userSource;
+    private ArrayList<String> conversationSource;
 
     public TestHashtagBuilder() {
-      this.content = "TestingString".toLowerCase();
+      this.id = UUID.randomUUID();
+      this.content = UUID.randomUUID().toString();
+      this.creationTime = Instant.now();
+      this.userSource = new ArrayList<>();
+      this.conversationSource = new ArrayList<>();
+    }
+
+    public TestHashtagBuilder withId(UUID id) {
+      this.id = id;
+      return this;
     }
 
     public TestHashtagBuilder withContent(String content) {
@@ -274,8 +301,23 @@ public class ModelDataTestHelpers {
       return this;
     }
 
+    public TestHashtagBuilder withCreationTime(Instant creationTime) {
+      this.creationTime = creationTime;
+      return this;
+    }
+
+    public TestHashtagBuilder withUserSource(ArrayList<String> userSource) {
+      this.userSource = userSource;
+      return this;
+    }
+
+    public TestHashtagBuilder withConversationSource(ArrayList<String> conversationSource) {
+      this.conversationSource = conversationSource;
+      return this;
+    }
+
     public Hashtag build() {
-      return new Hashtag(content);
+      return new Hashtag(id, content, creationTime, userSource, conversationSource);
     }
   }
 }

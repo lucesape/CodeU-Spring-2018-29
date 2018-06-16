@@ -1,5 +1,7 @@
 package codeu.model.data;
 
+import java.time.Instant;
+import java.util.ArrayList;
 import java.util.UUID;
 import org.junit.Assert;
 import org.junit.Test;
@@ -8,18 +10,29 @@ public class HashtagTest {
 
   @Test
   public void testCreate() {
-    String contentUpper = "Football";
-    String contentLower = "football";
-    Hashtag hashtag1 = new Hashtag(contentUpper);
-    Hashtag hashtag2 = new Hashtag(contentLower);
-    Assert.assertEquals(contentUpper.toLowerCase(), hashtag1.getContent());
-    Assert.assertEquals(contentLower, hashtag2.getContent());
+    UUID id = UUID.randomUUID();
+    String content = "Football";
+    Instant creation = Instant.now();
+
+    Hashtag hashtag =
+        new Hashtag(id, content, creation, new ArrayList<String>(), new ArrayList<String>());
+
+    Assert.assertEquals(id, hashtag.getId());
+    Assert.assertEquals(content.toLowerCase(), hashtag.getContent());
+    Assert.assertEquals(creation, hashtag.getCreationTime());
   }
 
   @Test
   public void testAddUser() {
+
     String content = "Football";
-    Hashtag hashtag = new Hashtag(content);
+    Hashtag hashtag =
+        new Hashtag(
+            UUID.randomUUID(),
+            content,
+            Instant.now(),
+            new ArrayList<String>(),
+            new ArrayList<String>());
 
     UUID userID1 = UUID.randomUUID();
     UUID userID2 = UUID.randomUUID();
@@ -35,7 +48,13 @@ public class HashtagTest {
   @Test
   public void testAddConversation() {
     String content = "Football";
-    Hashtag hashtag = new Hashtag(content);
+    Hashtag hashtag =
+        new Hashtag(
+            UUID.randomUUID(),
+            content,
+            Instant.now(),
+            new ArrayList<String>(),
+            new ArrayList<String>());
 
     UUID convID1 = UUID.randomUUID();
     UUID convID2 = UUID.randomUUID();

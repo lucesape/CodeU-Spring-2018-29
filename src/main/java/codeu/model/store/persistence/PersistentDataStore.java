@@ -26,6 +26,7 @@ import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -159,7 +160,6 @@ public class PersistentDataStore {
   public HashMap<String, Hashtag> loadHashtags() throws PersistentDataStoreException {
 
     HashMap<String, Hashtag> hashtags = new HashMap<String, Hashtag>();
-
     // Retrieve all hashtags from the datastore.
     Query query = new Query("chat-hashtags").addSort("creation_time", SortDirection.ASCENDING);
     PreparedQuery results = datastore.prepare(query);
@@ -167,7 +167,15 @@ public class PersistentDataStore {
     for (Entity entity : results.asIterable()) {
       try {
         String content = (String) entity.getProperty("content");
-        Hashtag hashtag = new Hashtag(content);
+        UUID uuid = UUID.fromString((String) entity.getProperty("uuid"));
+        Instant creationTime = Instant.parse((String) entity.getProperty("creation_time"));
+        List<String> userSource =
+            new ArrayList<String>(
+                Arrays.asList(((String) (entity.getProperty("user_source"))).split(",")));
+        List<String> convSource =
+            new ArrayList<String>(
+                Arrays.asList(((String) (entity.getProperty("conv_source"))).split(",")));
+        Hashtag hashtag = new Hashtag(uuid, content, creationTime, userSource, convSource);
         hashtags.put(content.toLowerCase(), hashtag);
       } catch (Exception e) {
         // In a production environment, errors should be very rare.
@@ -181,6 +189,20 @@ public class PersistentDataStore {
 
     return hashtags;
   }
+
+  //	/** Update a Hashtag object that exists in the Datastore service. */
+  //	public void updateThrough(Hashtag hashtag) {
+  //		// Retrieve all hashtags from the datastore.
+  //		Query query = new Query("chat-hashtags");
+  //		PreparedQuery results = datastore.prepare(query);
+  //		for (Entity entity : results.asIterable()) {
+  //			if (((String) entity.getProperty("uuid")).equals(hashtag.getId().toString())) {
+  //				entity.setProperty("user_source", hashtag.getUserSource());
+  //				entity.setProperty("conv_source", hashtag.getConversationSource());
+  //				return;
+  //			}
+  //		}
+  //	}
 
   /** Write a User object to the Datastore service. */
   public void writeThrough(User user) {
@@ -216,12 +238,12 @@ public class PersistentDataStore {
 
   /** Write a Hashtag object to the Datastore service. */
   public void writeThrough(Hashtag hashtag) {
-    Entity conversationEntity = new Entity("chat-hashtags", hashtag.getId().toString());
-    conversationEntity.setProperty("uuid", hashtag.getId().toString());
-    conversationEntity.setProperty("content", hashtag.getContent());
-    conversationEntity.setProperty("creation_time", hashtag.getCreationTime().toString());
-    conversationEntity.setProperty("user_source", hashtag.getUserSource());
-    conversationEntity.setProperty("conv_source", hashtag.getConversationSource());
-    datastore.put(conversationEntity);
+    Entity hashtagEntity = new Entity("chat-hashtags", hashtag.getId().toString());
+    hashtagEntity.setProperty("uuid", hashtag.getId().toString());
+    hashtagEntity.setProperty("content", hashtag.getContent());
+    hashtagEntity.setProperty("creation_time", hashtag.getCreationTime().toString());
+    hashtagEntity.setProperty("user_source", hashtag.getUserSource());
+    hashtagEntity.setProperty("conv_source", hashtag.getConversationSource());
+    datastore.put(hashtagEntity);
   }
 }

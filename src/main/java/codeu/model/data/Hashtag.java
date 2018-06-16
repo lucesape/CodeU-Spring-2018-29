@@ -15,11 +15,10 @@
 package codeu.model.data;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-/** Class representing a HSashtag. */
+/** Class representing a Hashtag. */
 public class Hashtag {
 
   private final UUID id;
@@ -29,12 +28,17 @@ public class Hashtag {
   private final Instant creation;
 
   /** Constructs a new Hashtag. */
-  public Hashtag(String content) {
-    this.id = UUID.randomUUID();
+  public Hashtag(
+      UUID id,
+      String content,
+      Instant creation,
+      List<String> userSource,
+      List<String> conversationSource) {
+    this.id = id;
     this.content = content.toLowerCase();
-    this.creation = Instant.now();
-    this.userSource = new ArrayList<String>();
-    this.conversationSource = new ArrayList<String>();
+    this.creation = creation;
+    this.userSource = userSource;
+    this.conversationSource = conversationSource;
   }
 
   /** Returns the ID of this Hashtag. */
