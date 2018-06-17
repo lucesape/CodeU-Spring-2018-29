@@ -27,6 +27,7 @@
 User user = (User) request.getAttribute("user");
 String profile_owner = (String) request.getAttribute("profile_owner");
 List<Message> messagesByUser = (List<Message>) request.getAttribute("messagesByUser");
+List<User> users = (List<User>) request.getAttribute("users");
 %>
 
 <!DOCTYPE html>
@@ -95,6 +96,16 @@ List<Message> messagesByUser = (List<Message>) request.getAttribute("messagesByU
       </div>
       <hr/>
     <% } %>
+
+    <h1>Profile pages with "hashtag"</h1>
+    <ul>
+      <% for (User user: users) { %>
+        <% if (user.getAboutMe().toLowerCase().contains("hashtag")) { %>
+            <li><a href="/users/<%= user.getAboutMe() %>">
+            <%= user.getAboutMe()%></a></li>
+        <% } %>
+      <% } %>
+    </ul>
   </div>
 </body>
 </html>
