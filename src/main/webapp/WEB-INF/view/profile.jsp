@@ -101,8 +101,8 @@ List<User> users = (List<User>) request.getAttribute("users");
     <ul>
       <% for (User user: users) { %>
         <% if (user.getAboutMe().toLowerCase().contains("hashtag")) { %>
-            <li><a href="/users/<%= user.getAboutMe() %>">
-            <%= user.getAboutMe()%></a></li>
+            <li><a href="/users/<%= user.getName() %>">
+            <%= user.getName() %>: <%= user.getAboutMe()%></a></li>
         <% } %>
       <% } %>
     </ul>
