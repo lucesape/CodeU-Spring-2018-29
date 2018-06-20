@@ -55,7 +55,9 @@ public class MessageStore {
    * @param persistentStorageAgent a mock used for testing
    */
   public static MessageStore getTestInstance(PersistentStorageAgent persistentStorageAgent) {
-    return new MessageStore(persistentStorageAgent);
+    instance = new MessageStore(persistentStorageAgent);
+    instance.setActivityStore(ActivityStore.getTestInstance(persistentStorageAgent));
+    return instance;
   }
 
   /**
@@ -70,7 +72,6 @@ public class MessageStore {
   /** This class is a singleton, so its constructor is private. Call getInstance() instead. */
   private MessageStore(PersistentStorageAgent persistentStorageAgent) {
     this.persistentStorageAgent = persistentStorageAgent;
-    this.setActivityStore(ActivityStore.getTestInstance(persistentStorageAgent));
     messages = new ArrayList<>();
   }
 

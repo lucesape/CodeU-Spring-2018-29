@@ -54,7 +54,9 @@ public class ConversationStore {
    * @param persistentStorageAgent a mock used for testing
    */
   public static ConversationStore getTestInstance(PersistentStorageAgent persistentStorageAgent) {
-    return new ConversationStore(persistentStorageAgent);
+    instance = new ConversationStore(persistentStorageAgent);
+    instance.setActivityStore(ActivityStore.getTestInstance(persistentStorageAgent));
+    return instance;
   }
 
   /**
