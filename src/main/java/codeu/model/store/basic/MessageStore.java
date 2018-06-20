@@ -70,6 +70,7 @@ public class MessageStore {
   /** This class is a singleton, so its constructor is private. Call getInstance() instead. */
   private MessageStore(PersistentStorageAgent persistentStorageAgent) {
     this.persistentStorageAgent = persistentStorageAgent;
+    this.setActivityStore(ActivityStore.getTestInstance(persistentStorageAgent));
     messages = new ArrayList<>();
   }
 
@@ -79,9 +80,7 @@ public class MessageStore {
     persistentStorageAgent.writeThrough(message);
     Activity activity1 = new Activity(message);
     activity1.setIsPublic(true);
-    if (activityStore != null) {
-      activityStore.addActivity(activity1);
-    }
+    activityStore.addActivity(activity1);
   }
 
   /** Access the current set of Messages within the given Conversation. */

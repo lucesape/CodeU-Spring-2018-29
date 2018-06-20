@@ -71,8 +71,8 @@ public class UserStore {
   /** This class is a singleton, so its constructor is private. Call getInstance() instead. */
   private UserStore(PersistentStorageAgent persistentStorageAgent) {
     this.persistentStorageAgent = persistentStorageAgent;
+    this.setActivityStore(ActivityStore.getTestInstance(persistentStorageAgent));
     users = new ArrayList<>();
-
     // hard-coded initial Admin:
     this.addUser("Admin01", "AdminPass01", /*admin=*/ true);
   }
@@ -126,9 +126,7 @@ public class UserStore {
     persistentStorageAgent.writeThrough(user);
     Activity activity1 = new Activity(user);
     activity1.setIsPublic(true);
-    if (activityStore != null) {
-      activityStore.addActivity(activity1);
-    }
+    activityStore.addActivity(activity1);
   }
 
   /** Update an existing User. */

@@ -69,6 +69,7 @@ public class ConversationStore {
   /** This class is a singleton, so its constructor is private. Call getInstance() instead. */
   private ConversationStore(PersistentStorageAgent persistentStorageAgent) {
     this.persistentStorageAgent = persistentStorageAgent;
+    this.setActivityStore(ActivityStore.getTestInstance(persistentStorageAgent));
     conversations = new ArrayList<>();
   }
 
@@ -83,9 +84,7 @@ public class ConversationStore {
     persistentStorageAgent.writeThrough(conversation);
     Activity activity1 = new Activity(conversation);
     activity1.setIsPublic(true);
-    if (activityStore != null) {
-      activityStore.addActivity(activity1);
-    }
+    activityStore.addActivity(activity1);
   }
 
   /** Check whether a Conversation title is already known to the application. */
