@@ -24,8 +24,8 @@
 <%@ page import="codeu.model.util.Util" %>
 
 <%
-User active_user = (User) request.getAttribute("user");
-String profile_owner = (String) request.getAttribute("profile_owner");
+User activeUser = (User) request.getAttribute("user");
+String profileOwner = (String) request.getAttribute("profileOwner");
 List<Message> messagesByUser = (List<Message>) request.getAttribute("messagesByUser");
 List<User> users = (List<User>) request.getAttribute("users");
 %>
@@ -63,16 +63,16 @@ List<User> users = (List<User>) request.getAttribute("users");
 
     <% if (request.getSession().getAttribute("user") != null) { %>
 
-      <h1><%=profile_owner%>'s Profile Page</h1>
+      <h1><%=profileOwner%>'s Profile Page</h1>
       <hr/>
-      <strong>About <%=profile_owner%></strong><br>
-      <p><%=StyleText.style(active_user.getAboutMe())%></p>
+      <strong>About <%=profileOwner%></strong><br>
+      <p><%=StyleText.style(activeUser.getAboutMe())%></p>
 
       <!--
           Only show the editable fields if the logged in user is the
           owner of this profile.
       -->
-      <% if (request.getSession().getAttribute("user").equals(profile_owner)) { %>
+      <% if (request.getSession().getAttribute("user").equals(profileOwner)) { %>
         <form action="/users/<%=request.getSession().getAttribute("user") %>" method="POST">
           <div class="form-group">
             <label class="form-control-label">Edit Your About Me (Only you can see this):</label>
@@ -83,7 +83,7 @@ List<User> users = (List<User>) request.getAttribute("users");
         <hr/>
       <% } %>
 
-      <h1><%=profile_owner%>'s Sent Messages</h1>
+      <h1><%=profileOwner%>'s Sent Messages</h1>
       <div id="chat">
         <ul>
           <% for (Message message : messagesByUser) {

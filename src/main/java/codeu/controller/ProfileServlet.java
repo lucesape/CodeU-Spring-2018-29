@@ -69,9 +69,9 @@ public class ProfileServlet extends HttpServlet {
       throws IOException, ServletException {
 
     String requestUrl = request.getRequestURI();
-    String profile_owner = requestUrl.substring("/users/".length());
+    String profileOwner = requestUrl.substring("/users/".length());
 
-    User user = userStore.getUser(profile_owner);
+    User user = userStore.getUser(profileOwner);
     if (user == null) {
       // user is not logged in, redirect to login page
       response.sendRedirect("/login");
@@ -90,7 +90,7 @@ public class ProfileServlet extends HttpServlet {
 
     request.setAttribute("users", users);
     request.setAttribute("messagesByUser", messagesByUser);
-    request.setAttribute("profile_owner", profile_owner);
+    request.setAttribute("profileOwner", profileOwner);
     request.setAttribute("user", user);
     request.getRequestDispatcher("/WEB-INF/view/profile.jsp").forward(request, response);
   }
