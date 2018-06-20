@@ -52,25 +52,31 @@ List<Activity> activities = (List<Activity>) request.getAttribute("activities");
                   UUID id = activity.getId();
                   UUID idOwnerId = activity.getOwnerId();
                   String time = Util.FormatDateTime(activity.getCreationTime());
-                  if(action == Action.REGISTER_USER){
-                      String name = UserStore.getInstance().getUser(id).getName();%>
-                      <li><b><%= time %>:</b> <%= name %> joined CodeByters!</li>
-                  <% } %>
-                  <% if(action == Action.CREATE_CONV) {
-                       String name = UserStore.getInstance().getUser(idOwnerId).getName();
-                       Conversation conv = ConversationStore.getInstance().getConversationById(id);%>
-                       <li><b><%= time %>:</b> <%= name %> created a new conversation:
-                       <a href="/chat/<%= conv.getTitle() %>"> <%= conv.getTitle() %></a>.</li>
-                  <% } %>
-                  <% if(action == Action.SEND_MESSAGE) {
-                       String name = UserStore.getInstance().getUser(idOwnerId).getName();
-                       Message mess = MessageStore.getInstance().getMessageById(id);
-                       Conversation conv = ConversationStore.getInstance().getConversationById(mess.getConversationId());%>
-                       <li><b><%= time %>:</b> <%= name %> sent a message in
-                       <a href="/chat/<%= conv.getTitle() %>"> <%= conv.getTitle() %> </a>: "<%= mess.getContent() %>".</li>
+                  String name = "";
+                  switch(action) {
+
+                  case REGISTER_USER:
+                    name = UserStore.getInstance().getUser(id).getName();%>
+                    <li><b><%= time %>:</b> <%= name %> joined CodeByters!</li>
+                    <% break;
+
+                  case CREATE_CONV:
+                     name = UserStore.getInstance().getUser(idOwnerId).getName();
+                     Conversation conv1 = ConversationStore.getInstance().getConversationById(id);%>
+                     <li><b><%= time %>:</b> <%= name %> created a new conversation:
+                     <a href="/chat/<%= conv1.getTitle() %>"> <%= conv1.getTitle() %></a>.</li>
+                     <% break;
+
+                  case SEND_MESSAGE:
+                     name = UserStore.getInstance().getUser(idOwnerId).getName();
+                     Message mess = MessageStore.getInstance().getMessageById(id);
+                     Conversation conv2 = ConversationStore.getInstance().getConversationById(mess.getConversationId());%>
+                     <li><b><%= time %>:</b> <%= name %> sent a message in
+                     <a href="/chat/<%= conv2.getTitle() %>"> <%= conv2.getTitle() %> </a>: "<%= mess.getContent() %>".</li>
+
                   <% } %>
                 <% } %>
-            <% } %>
+              <% } %>
           </ul>
         </div>
     </div>
