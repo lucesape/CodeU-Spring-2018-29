@@ -66,6 +66,23 @@ public class ModelDataTestHelpers {
     }
   }
 
+  /** Asserts that all fields on both Activities are the same. */
+  public static void assertActivityEquals(Activity expected, Activity actual) {
+    if (expected == null) {
+      assertNull(actual);
+    } else {
+      assertNotNull("Activity not found", actual);
+      assertEquals(expected.getId(), actual.getId());
+      assertEquals(expected.getId(), actual.getId());
+      assertEquals(expected.getOwnerId(), actual.getOwnerId());
+      assertEquals(expected.getAction(), actual.getAction());
+      assertEquals(expected.isPublic(), actual.isPublic());
+      assertEquals(expected.getCreationTime(), actual.getCreationTime());
+      assertEquals(expected.getThumbnail(), actual.getThumbnail());
+
+    }
+  }
+
   /**
    * Use this to create a fake Conversation to use in a unit test. When created it contains random
    * data in every field, and the individual methods can be used to set the test conditions. For
@@ -237,4 +254,71 @@ public class ModelDataTestHelpers {
       return user;
     }
   }
+  /**
+   * Use this to create a fake Activity to use in a unit test. When created it contains random data
+   * in every field, and the individual methods can be used to set the test conditions. For example,
+   * if the test needs specific name, then you could do:
+   *
+   * <pre>{@code
+   * UUID fakeOwner = UUID.randomUUID();
+   * boolean isPublic = true;
+   * Activity fakeActivity = new TestActivityBuilder().withOwnerId(fakeOwner).withIsPublic(isPublic).build();
+   * }</pre>
+   */
+  public static class TestActivityBuilder {
+    private UUID id;
+    private UUID ownerId;
+    private Action action;
+    private boolean isPublic;
+    private Instant creationTime;
+    private String thumbnail;
+
+    private Random random = new Random();
+
+    public TestActivityBuilder() {
+      this.id = UUID.randomUUID();
+      this.ownerId = UUID.randomUUID();
+      this.isPublic = random.nextBoolean();
+      this.creationTime = Instant.now();
+      // default action: Registering_USER
+      this.action = Action.REGISTER_USER;
+      this.thumbnail = UUID.randomUUID().toString();
+    }
+
+    public TestActivityBuilder withId(UUID id) {
+      this.id = id;
+      return this;
+    }
+
+    public TestActivityBuilder withOwnerId(UUID ownerId) {
+      this.ownerId = ownerId;
+      return this;
+    }
+
+    public TestActivityBuilder withIsPublic(boolean isPublic) {
+      this.isPublic = isPublic;
+      return this;
+    }
+
+    public TestActivityBuilder withCreationTime(Instant creationTime) {
+      this.creationTime = creationTime;
+      return this;
+    }
+
+    public TestActivityBuilder withAction(Action action) {
+      this.action = action;
+      return this;
+    }
+
+    public TestActivityBuilder withThumbnail(String thumbnail) {
+      this.thumbnail = thumbnail;
+      return this;
+    }
+
+    public Activity build() {
+      Activity activity = new Activity(id, ownerId, action, isPublic, creationTime, thumbnail);
+      return activity;
+    }
+  }
 }
+
