@@ -12,9 +12,8 @@ import codeu.model.store.basic.MessageStore;
 import codeu.model.store.basic.UserStore;
 import codeu.model.store.persistence.PersistentDataStoreException;
 import codeu.model.store.persistence.PersistentStorageAgent;
-
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
@@ -39,8 +38,8 @@ public class ServerStartupListener implements ServletContextListener {
 
       List<Activity> activities = PersistentStorageAgent.getInstance().loadActivities();
       ActivityStore.getInstance().setActivities(activities);
-      
-      HashMap<String, Hashtag> hashtags = PersistentStorageAgent.getInstance().loadHashtags();
+
+      Map<String, Hashtag> hashtags = PersistentStorageAgent.getInstance().loadHashtags();
       HashtagStore.getInstance().setHashtags(hashtags);
 
     } catch (PersistentDataStoreException e) {

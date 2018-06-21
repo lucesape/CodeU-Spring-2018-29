@@ -4,7 +4,7 @@
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-//    http://www.apache.org/licenses/LICENSE-2.0
+// http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,7 +15,8 @@
 package codeu.model.data;
 
 import java.time.Instant;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 /** Class representing a Hashtag. */
@@ -23,8 +24,8 @@ public class Hashtag {
 
   private final UUID id;
   private final String content;
-  private List<String> userSource;
-  private List<String> conversationSource;
+  private Set<String> userSource;
+  private Set<String> conversationSource;
   private final Instant creation;
 
   /** Constructs a new Hashtag. */
@@ -32,13 +33,13 @@ public class Hashtag {
       UUID id,
       String content,
       Instant creation,
-      List<String> userSource,
-      List<String> conversationSource) {
+      Set<String> userSource,
+      Set<String> conversationSource) {
     this.id = id;
     this.content = content.toLowerCase();
     this.creation = creation;
-    this.userSource = userSource;
-    this.conversationSource = conversationSource;
+    this.userSource = new HashSet<>();
+    this.conversationSource = new HashSet<>();
   }
 
   /** Returns the ID of this Hashtag. */
@@ -71,11 +72,7 @@ public class Hashtag {
    * is added; returns false if the String representation of the User exists.
    */
   public boolean addUser(UUID userID) {
-    if (userSource.contains(userID.toString())) {
-      return false;
-    }
-    this.userSource.add(userID.toString());
-    return true;
+    return userSource.add(userID.toString());
   }
 
   /**
@@ -84,10 +81,6 @@ public class Hashtag {
    * conversation exists.
    */
   public boolean addConversation(UUID convID) {
-    if (conversationSource.contains(convID.toString())) {
-      return false;
-    }
-    this.conversationSource.add(convID.toString());
-    return true;
+    return conversationSource.add(convID.toString());
   }
 }

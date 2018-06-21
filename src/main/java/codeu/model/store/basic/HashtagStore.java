@@ -4,7 +4,7 @@
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-//    http://www.apache.org/licenses/LICENSE-2.0
+// http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -18,6 +18,7 @@ import codeu.model.data.Hashtag;
 import codeu.model.data.HashtagCreator;
 import codeu.model.store.persistence.PersistentStorageAgent;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class HashtagStore {
@@ -51,7 +52,7 @@ public class HashtagStore {
   private PersistentStorageAgent persistentStorageAgent;
 
   /** The in-memory list of Hashtags. */
-  private HashMap<String, Hashtag> map;
+  private Map<String, Hashtag> map;
 
   /** This class is a singleton, so its constructor is private. Call getInstance() instead. */
   private HashtagStore(PersistentStorageAgent persistentStorageAgent) {
@@ -76,19 +77,23 @@ public class HashtagStore {
     }
     // If the content does not exist in the map; the parameter hashtag will
     // be added.
-    if (creator == HashtagCreator.USER) hashtag.addUser(id);
-    if (creator == HashtagCreator.CONVERSATION) hashtag.addConversation(id);
+    switch (creator) {
+      case USER:
+        hashtag.addUser(id);
+      case CONVERSATION:
+        hashtag.addConversation(id);
+    }
     this.map.put(content, hashtag);
     persistentStorageAgent.writeThrough(hashtag);
   }
 
   /** Sets the HashMap of Hashtags stored by this HashtagStore based on the input HashMap. */
-  public void setHashtags(HashMap<String, Hashtag> map) {
+  public void setHashtags(Map<String, Hashtag> map) {
     this.map = map;
   }
 
   /** Access the current set of Hashtags known to the application. */
-  public HashMap<String, Hashtag> getAllHashtags() {
+  public Map<String, Hashtag> getAllHashtags() {
     return map;
   }
 }

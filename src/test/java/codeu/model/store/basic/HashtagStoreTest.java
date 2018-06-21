@@ -1,12 +1,13 @@
 package codeu.model.store.basic;
 
+import static codeu.model.data.ModelDataTestHelpers.TestHashtagBuilder;
 import static codeu.model.data.ModelDataTestHelpers.assertHashtagEquals;
 
 import codeu.model.data.Hashtag;
 import codeu.model.data.HashtagCreator;
-import codeu.model.data.ModelDataTestHelpers;
 import codeu.model.store.persistence.PersistentStorageAgent;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 import org.junit.Assert;
 import org.junit.Before;
@@ -27,24 +28,22 @@ public class HashtagStoreTest {
   public void testSetAndGetHashtags() {
     final HashMap<String, Hashtag> hashtags = new HashMap<String, Hashtag>();
 
-    final Hashtag hash1 =
-        new ModelDataTestHelpers.TestHashtagBuilder().withContent("Soccer").build();
-    final Hashtag hash2 = new ModelDataTestHelpers.TestHashtagBuilder().withContent("Swim").build();
+    final Hashtag hash1 = new TestHashtagBuilder().withContent("Soccer").build();
+    final Hashtag hash2 = new TestHashtagBuilder().withContent("Swim").build();
 
     hashtags.put(hash1.getContent(), hash1);
     hashtags.put(hash2.getContent(), hash2);
     hashtagStore.setHashtags(hashtags);
 
-    HashMap<String, Hashtag> resultHashtags = hashtagStore.getAllHashtags();
+    Map<String, Hashtag> resultHashtags = hashtagStore.getAllHashtags();
     Assert.assertEquals(hashtags, resultHashtags);
   }
 
   @Test
   public void testAddHashtagNotContain() {
     final HashMap<String, Hashtag> hashtags = new HashMap<String, Hashtag>();
-    final Hashtag hash1 =
-        new ModelDataTestHelpers.TestHashtagBuilder().withContent("Soccer").build();
-    final Hashtag hash2 = new ModelDataTestHelpers.TestHashtagBuilder().withContent("Swim").build();
+    final Hashtag hash1 = new TestHashtagBuilder().withContent("Soccer").build();
+    final Hashtag hash2 = new TestHashtagBuilder().withContent("Swim").build();
 
     UUID user1 = UUID.randomUUID();
     hash1.addUser(user1);
@@ -57,7 +56,7 @@ public class HashtagStoreTest {
     hashtagStore.addHashtag(hash1, HashtagCreator.USER, user1);
     hashtagStore.addHashtag(hash2, HashtagCreator.USER, user2);
 
-    HashMap<String, Hashtag> resultHashtags = hashtagStore.getAllHashtags();
+    Map<String, Hashtag> resultHashtags = hashtagStore.getAllHashtags();
     assertHashtagEquals(hashtags.get(hash1.getContent()), resultHashtags.get(hash1.getContent()));
     assertHashtagEquals(hashtags.get(hash2.getContent()), resultHashtags.get(hash2.getContent()));
   }
@@ -65,8 +64,7 @@ public class HashtagStoreTest {
   @Test
   public void testAddHashtagContain() {
     final HashMap<String, Hashtag> hashtags = new HashMap<String, Hashtag>();
-    final Hashtag hash1 =
-        new ModelDataTestHelpers.TestHashtagBuilder().withContent("Soccer").build();
+    final Hashtag hash1 = new TestHashtagBuilder().withContent("Soccer").build();
     UUID user1 = UUID.randomUUID();
     hash1.addUser(user1);
     UUID user2 = UUID.randomUUID();
@@ -77,7 +75,7 @@ public class HashtagStoreTest {
     hashtagStore.addHashtag(hash1, HashtagCreator.USER, user1);
     hashtagStore.addHashtag(hash1, HashtagCreator.USER, user2);
 
-    HashMap<String, Hashtag> resultHashtags = hashtagStore.getAllHashtags();
+    Map<String, Hashtag> resultHashtags = hashtagStore.getAllHashtags();
     assertHashtagEquals(hashtags.get(hash1.getContent()), resultHashtags.get(hash1.getContent()));
   }
 }
