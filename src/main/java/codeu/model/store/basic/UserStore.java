@@ -14,6 +14,7 @@
 
 package codeu.model.store.basic;
 
+import codeu.model.data.Activity;
 import codeu.model.data.User;
 import codeu.model.store.persistence.PersistentStorageAgent;
 import java.time.Instant;
@@ -32,6 +33,12 @@ public class UserStore {
   /** Singleton instance of UserStore. */
   private static UserStore instance;
 
+  private ActivityStore activityStore;
+
+  public void setActivityStore(ActivityStore activityStore) {
+    this.activityStore = activityStore;
+  }
+
   /**
    * Returns the singleton instance of UserStore that should be shared between all servlet classes.
    * Do not call this function from a test; use getTestInstance() instead.
@@ -39,6 +46,7 @@ public class UserStore {
   public static UserStore getInstance() {
     if (instance == null) {
       instance = new UserStore(PersistentStorageAgent.getInstance());
+      instance.setActivityStore(ActivityStore.getInstance());
     }
     return instance;
   }
@@ -49,7 +57,7 @@ public class UserStore {
    * @param persistentStorageAgent a mock used for testing
    */
   public static UserStore getTestInstance(PersistentStorageAgent persistentStorageAgent) {
-    return new UserStore(persistentStorageAgent);
+    return instance = new UserStore(persistentStorageAgent);
   }
 
   /**
@@ -63,8 +71,10 @@ public class UserStore {
   /** This class is a singleton, so its constructor is private. Call getInstance() instead. */
   private UserStore(PersistentStorageAgent persistentStorageAgent) {
     this.persistentStorageAgent = persistentStorageAgent;
+    // Todo: This should be inside getTestInstance() once we fixed line 79
+    this.setActivityStore(ActivityStore.getTestInstance(persistentStorageAgent));
     users = new ArrayList<>();
-
+    // Todo: We need to find a better way to add the initial admin
     // hard-coded initial Admin:
     this.addUser("Admin01", "AdminPass01", /*admin=*/ true);
   }
@@ -77,8 +87,7 @@ public class UserStore {
     String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
     User user = new User(UUID.randomUUID(), username, hashedPassword, Instant.now());
     user.setAdmin(admin);
-    this.users.add(user);
-    persistentStorageAgent.writeThrough(user);
+    this.addUser(user);
   }
 
   /**
@@ -117,6 +126,9 @@ public class UserStore {
   public void addUser(User user) {
     users.add(user);
     persistentStorageAgent.writeThrough(user);
+    Activity activity1 = new Activity(user);
+    activity1.setIsPublic(true);
+    activityStore.addActivity(activity1);
   }
 
   /** Update an existing User. */

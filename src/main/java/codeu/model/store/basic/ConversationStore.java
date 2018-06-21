@@ -14,6 +14,7 @@
 
 package codeu.model.store.basic;
 
+import codeu.model.data.Activity;
 import codeu.model.data.Conversation;
 import codeu.model.store.persistence.PersistentStorageAgent;
 import java.util.ArrayList;
@@ -29,6 +30,12 @@ public class ConversationStore {
   /** Singleton instance of ConversationStore. */
   private static ConversationStore instance;
 
+  private ActivityStore activityStore;
+
+  public void setActivityStore(ActivityStore activityStore) {
+    this.activityStore = activityStore;
+  }
+
   /**
    * Returns the singleton instance of ConversationStore that should be shared between all servlet
    * classes. Do not call this function from a test; use getTestInstance() instead.
@@ -36,6 +43,7 @@ public class ConversationStore {
   public static ConversationStore getInstance() {
     if (instance == null) {
       instance = new ConversationStore(PersistentStorageAgent.getInstance());
+      instance.setActivityStore(ActivityStore.getInstance());
     }
     return instance;
   }
@@ -46,7 +54,9 @@ public class ConversationStore {
    * @param persistentStorageAgent a mock used for testing
    */
   public static ConversationStore getTestInstance(PersistentStorageAgent persistentStorageAgent) {
-    return new ConversationStore(persistentStorageAgent);
+    instance = new ConversationStore(persistentStorageAgent);
+    instance.setActivityStore(ActivityStore.getTestInstance(persistentStorageAgent));
+    return instance;
   }
 
   /**
@@ -61,6 +71,7 @@ public class ConversationStore {
   /** This class is a singleton, so its constructor is private. Call getInstance() instead. */
   private ConversationStore(PersistentStorageAgent persistentStorageAgent) {
     this.persistentStorageAgent = persistentStorageAgent;
+    this.setActivityStore(ActivityStore.getTestInstance(persistentStorageAgent));
     conversations = new ArrayList<>();
   }
 
@@ -73,6 +84,9 @@ public class ConversationStore {
   public void addConversation(Conversation conversation) {
     conversations.add(conversation);
     persistentStorageAgent.writeThrough(conversation);
+    Activity activity1 = new Activity(conversation);
+    activity1.setIsPublic(true);
+    activityStore.addActivity(activity1);
   }
 
   /** Check whether a Conversation title is already known to the application. */
