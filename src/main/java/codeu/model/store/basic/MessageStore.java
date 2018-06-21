@@ -109,6 +109,16 @@ public class MessageStore {
     return messagesByUser;
   }
 
+  /** Find and return the message with the given title. */
+  public Message getMessageById(UUID id) {
+    for (Message message : messages) {
+      if (message.getId().equals(id)) {
+        return message;
+      }
+    }
+    return null;
+  }
+
   /** Sets the List of Messages stored by this MessageStore. */
   public void setMessages(List<Message> messages) {
     this.messages = messages;
