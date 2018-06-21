@@ -1,8 +1,7 @@
 package codeu.model.store.persistence;
 
-import codeu.model.data.Conversation;
-import codeu.model.data.Message;
-import codeu.model.data.User;
+import codeu.model.data.*;
+import static codeu.model.data.ModelDataTestHelpers.assertActivityEquals;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import java.time.Instant;
@@ -145,5 +144,38 @@ public class PersistentDataStoreTest {
     Assert.assertEquals(authorTwo, resultMessageTwo.getAuthorId());
     Assert.assertEquals(contentTwo, resultMessageTwo.getContent());
     Assert.assertEquals(creationTwo, resultMessageTwo.getCreationTime());
+  }
+
+  @Test
+  public void testSaveAndLoadActivities() throws PersistentDataStoreException {
+    UUID idOne = UUID.fromString("10000000-2222-3333-4444-555555555555");
+    UUID idOwner = UUID.fromString("10000001-2222-3333-4444-555555555555");
+    Action action1 = Action.REGISTER_USER;
+    Instant creationOne = Instant.ofEpochMilli(1000);
+    String thumbnail1 = "test content one";
+    Activity inputActivityOne =
+            new Activity(idOne, idOwner, action1, true, creationOne, thumbnail1);
+
+    UUID idTwo = UUID.fromString("20000000-2222-3333-4444-555555555555");
+    UUID idOwnerTwo = UUID.fromString("20000001-2222-3333-4444-555555555555");
+    Action action2 = Action.SEND_MESSAGE;
+    Instant creationTwo = Instant.ofEpochMilli(1000);
+    String thumbnail2 = "test content two";
+    Activity inputActivityTwo =
+            new Activity(idTwo, idOwnerTwo, action2, true, creationTwo, thumbnail2);
+
+    // save
+    persistentDataStore.writeThrough(inputActivityOne);
+    persistentDataStore.writeThrough(inputActivityTwo);
+
+    // load
+    List<Activity> resultActivities = persistentDataStore.loadActivities();
+
+    // confirm that what we saved matches what we loaded
+    Activity resultActivityOne = resultActivities.get(0);
+    assertActivityEquals(inputActivityOne, resultActivityOne);
+
+    Activity resultActivityTwo = resultActivities.get(1);
+    assertActivityEquals(inputActivityTwo, resultActivityTwo);
   }
 }

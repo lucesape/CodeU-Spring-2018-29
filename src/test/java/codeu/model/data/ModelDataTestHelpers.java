@@ -205,7 +205,7 @@ public class ModelDataTestHelpers {
     private Instant creationTime;
     private boolean admin;
     private String aboutMe;
-    
+
     private Random random = new Random();
 
     public TestUserBuilder() {
@@ -238,14 +238,14 @@ public class ModelDataTestHelpers {
     }
 
     public TestUserBuilder withAdmin(boolean admin) {
-        this.admin = admin;
-        return this;
-      }
+      this.admin = admin;
+      return this;
+    }
 
     public TestUserBuilder withAboutMe(String aboutMe) {
-        this.aboutMe = aboutMe;
-        return this;
-      }
+      this.aboutMe = aboutMe;
+      return this;
+    }
 
     public User build() {
       User user = new User(id, name, passwordHash, creationTime);
@@ -254,6 +254,7 @@ public class ModelDataTestHelpers {
       return user;
     }
   }
+  
   /**
    * Use this to create a fake Activity to use in a unit test. When created it contains random data
    * in every field, and the individual methods can be used to set the test conditions. For example,
@@ -272,7 +273,7 @@ public class ModelDataTestHelpers {
     private boolean isPublic;
     private Instant creationTime;
     private String thumbnail;
-
+    
     private Random random = new Random();
 
     public TestActivityBuilder() {
@@ -314,7 +315,7 @@ public class ModelDataTestHelpers {
       this.thumbnail = thumbnail;
       return this;
     }
-
+    
     public Activity build() {
       Activity activity = new Activity(id, ownerId, action, isPublic, creationTime, thumbnail);
       return activity;
