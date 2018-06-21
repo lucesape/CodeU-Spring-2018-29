@@ -4,7 +4,7 @@
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-//    http://www.apache.org/licenses/LICENSE-2.0
+// http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -26,7 +26,9 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -51,7 +53,7 @@ public class PersistentDataStore {
    * Loads all User objects from the Datastore service and returns them in a List.
    *
    * @throws codeu.model.store.persistence.PersistentDataStoreException if an error was detected
-   *     during the load from the Datastore service
+   *         during the load from the Datastore service
    */
   public List<User> loadUsers() throws PersistentDataStoreException {
 
@@ -87,7 +89,7 @@ public class PersistentDataStore {
    * ascending order by creation time.
    *
    * @throws codeu.model.store.persistence.PersistentDataStoreException if an error was detected
-   *     during the load from the Datastore service
+   *         during the load from the Datastore service
    */
   public List<Conversation> loadConversations() throws PersistentDataStoreException {
 
@@ -123,7 +125,7 @@ public class PersistentDataStore {
    * ascending order by creation time.
    *
    * @throws codeu.model.store.persistence.PersistentDataStoreException if an error was detected
-   *     during the load from the Datastore service
+   *         during the load from the Datastore service
    */
   public List<Message> loadMessages() throws PersistentDataStoreException {
 
@@ -159,7 +161,7 @@ public class PersistentDataStore {
    * Loads all Activity objects from the Datastore service and returns them in a List.
    *
    * @throws codeu.model.store.persistence.PersistentDataStoreException if an error was detected
-   *     during the load from the Datastore service
+   *         during the load from the Datastore service
    */
   public List<Activity> loadActivities() throws PersistentDataStoreException {
 
@@ -178,7 +180,7 @@ public class PersistentDataStore {
         Instant creationTime = Instant.parse((String) entity.getProperty("creation_time"));
         String thumbnail = (String) entity.getProperty("thumbnail");
         Activity activity =
-                new Activity(uuid, uuidOwner, action, isPublic, creationTime, thumbnail);
+            new Activity(uuid, uuidOwner, action, isPublic, creationTime, thumbnail);
         activities.add(activity);
       } catch (Exception e) {
         // In a production environment, errors should be very rare. Errors which may
@@ -190,39 +192,37 @@ public class PersistentDataStore {
 
     return activities;
   }
-  
+
   public HashMap<String, Hashtag> loadHashtags() throws PersistentDataStoreException {
 
-	    HashMap<String, Hashtag> hashtags = new HashMap<String, Hashtag>();
-	    // Retrieve all hashtags from the datastore.
-	    Query query = new Query("chat-hashtags").addSort("creation_time", SortDirection.ASCENDING);
-	    PreparedQuery results = datastore.prepare(query);
+    HashMap<String, Hashtag> hashtags = new HashMap<String, Hashtag>();
+    // Retrieve all hashtags from the datastore.
+    Query query = new Query("chat-hashtags").addSort("creation_time", SortDirection.ASCENDING);
+    PreparedQuery results = datastore.prepare(query);
 
-	    for (Entity entity : results.asIterable()) {
-	      try {
-	        String content = (String) entity.getProperty("content");
-	        UUID uuid = UUID.fromString((String) entity.getProperty("uuid"));
-	        Instant creationTime = Instant.parse((String) entity.getProperty("creation_time"));
-	        List<String> userSource =
-	            new ArrayList<String>(
-	                Arrays.asList(((String) (entity.getProperty("user_source"))).split(",")));
-	        List<String> convSource =
-	            new ArrayList<String>(
-	                Arrays.asList(((String) (entity.getProperty("conv_source"))).split(",")));
-	        Hashtag hashtag = new Hashtag(uuid, content, creationTime, userSource, convSource);
-	        hashtags.put(content.toLowerCase(), hashtag);
-	      } catch (Exception e) {
-	        // In a production environment, errors should be very rare.
-	        // Errors which may
-	        // occur include network errors, Datastore service errors,
-	        // authorization errors,
-	        // database entity definition mismatches, or service mismatches.
-	        throw new PersistentDataStoreException(e);
-	      }
-	    }
-	    return hashtags;
+    for (Entity entity : results.asIterable()) {
+      try {
+        String content = (String) entity.getProperty("content");
+        UUID uuid = UUID.fromString((String) entity.getProperty("uuid"));
+        Instant creationTime = Instant.parse((String) entity.getProperty("creation_time"));
+        Set<String> userSource = new HashSet<String>(
+            Arrays.asList(((String) (entity.getProperty("user_source"))).split(",")));
+        Set<String> convSource = new HashSet<String>(
+            Arrays.asList(((String) (entity.getProperty("conv_source"))).split(",")));
+        Hashtag hashtag = new Hashtag(uuid, content, creationTime, userSource, convSource);
+        hashtags.put(content.toLowerCase(), hashtag);
+      } catch (Exception e) {
+        // In a production environment, errors should be very rare.
+        // Errors which may
+        // occur include network errors, Datastore service errors,
+        // authorization errors,
+        // database entity definition mismatches, or service mismatches.
+        throw new PersistentDataStoreException(e);
+      }
+    }
+    return hashtags;
   }
-  
+
   /** Write a User object to the Datastore service. */
   public void writeThrough(User user) {
     Entity userEntity = new Entity("chat-users", user.getId().toString());
