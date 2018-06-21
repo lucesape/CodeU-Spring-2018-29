@@ -14,10 +14,8 @@
 
 package codeu.model.store.persistence;
 
-import codeu.model.data.Conversation;
-import codeu.model.data.Hashtag;
-import codeu.model.data.Message;
-import codeu.model.data.User;
+import codeu.model.data.*;
+import codeu.model.store.persistence.PersistentDataStoreException;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
@@ -157,53 +155,74 @@ public class PersistentDataStore {
     return messages;
   }
 
-  public HashMap<String, Hashtag> loadHashtags() throws PersistentDataStoreException {
+  /**
+   * Loads all Activity objects from the Datastore service and returns them in a List.
+   *
+   * @throws codeu.model.store.persistence.PersistentDataStoreException if an error was detected
+   *     during the load from the Datastore service
+   */
+  public List<Activity> loadActivities() throws PersistentDataStoreException {
 
-    HashMap<String, Hashtag> hashtags = new HashMap<String, Hashtag>();
-    // Retrieve all hashtags from the datastore.
-    Query query = new Query("chat-hashtags").addSort("creation_time", SortDirection.ASCENDING);
+    List<Activity> activities = new ArrayList<>();
+
+    // Retrieve all activities from the datastore.
+    Query query = new Query("chat-activities");
     PreparedQuery results = datastore.prepare(query);
 
     for (Entity entity : results.asIterable()) {
       try {
-        String content = (String) entity.getProperty("content");
         UUID uuid = UUID.fromString((String) entity.getProperty("uuid"));
+        UUID uuidOwner = UUID.fromString((String) entity.getProperty("owner_uuid"));
+        Action action = Action.valueOf((String) entity.getProperty("action"));
+        Boolean isPublic = Boolean.valueOf((String) entity.getProperty("isPublic"));
         Instant creationTime = Instant.parse((String) entity.getProperty("creation_time"));
-        List<String> userSource =
-            new ArrayList<String>(
-                Arrays.asList(((String) (entity.getProperty("user_source"))).split(",")));
-        List<String> convSource =
-            new ArrayList<String>(
-                Arrays.asList(((String) (entity.getProperty("conv_source"))).split(",")));
-        Hashtag hashtag = new Hashtag(uuid, content, creationTime, userSource, convSource);
-        hashtags.put(content.toLowerCase(), hashtag);
+        String thumbnail = (String) entity.getProperty("thumbnail");
+        Activity activity =
+                new Activity(uuid, uuidOwner, action, isPublic, creationTime, thumbnail);
+        activities.add(activity);
       } catch (Exception e) {
-        // In a production environment, errors should be very rare.
-        // Errors which may
-        // occur include network errors, Datastore service errors,
-        // authorization errors,
+        // In a production environment, errors should be very rare. Errors which may
+        // occur include network errors, Datastore service errors, authorization errors,
         // database entity definition mismatches, or service mismatches.
         throw new PersistentDataStoreException(e);
       }
     }
 
-    return hashtags;
+    return activities;
   }
+  
+  public HashMap<String, Hashtag> loadHashtags() throws PersistentDataStoreException {
 
-  //	/** Update a Hashtag object that exists in the Datastore service. */
-  //	public void updateThrough(Hashtag hashtag) {
-  //		// Retrieve all hashtags from the datastore.
-  //		Query query = new Query("chat-hashtags");
-  //		PreparedQuery results = datastore.prepare(query);
-  //		for (Entity entity : results.asIterable()) {
-  //			if (((String) entity.getProperty("uuid")).equals(hashtag.getId().toString())) {
-  //				entity.setProperty("user_source", hashtag.getUserSource());
-  //				entity.setProperty("conv_source", hashtag.getConversationSource());
-  //				return;
-  //			}
-  //		}
-  //	}
+	    HashMap<String, Hashtag> hashtags = new HashMap<String, Hashtag>();
+	    // Retrieve all hashtags from the datastore.
+	    Query query = new Query("chat-hashtags").addSort("creation_time", SortDirection.ASCENDING);
+	    PreparedQuery results = datastore.prepare(query);
 
+	    for (Entity entity : results.asIterable()) {
+	      try {
+	        String content = (String) entity.getProperty("content");
+	        UUID uuid = UUID.fromString((String) entity.getProperty("uuid"));
+	        Instant creationTime = Instant.parse((String) entity.getProperty("creation_time"));
+	        List<String> userSource =
+	            new ArrayList<String>(
+	                Arrays.asList(((String) (entity.getProperty("user_source"))).split(",")));
+	        List<String> convSource =
+	            new ArrayList<String>(
+	                Arrays.asList(((String) (entity.getProperty("conv_source"))).split(",")));
+	        Hashtag hashtag = new Hashtag(uuid, content, creationTime, userSource, convSource);
+	        hashtags.put(content.toLowerCase(), hashtag);
+	      } catch (Exception e) {
+	        // In a production environment, errors should be very rare.
+	        // Errors which may
+	        // occur include network errors, Datastore service errors,
+	        // authorization errors,
+	        // database entity definition mismatches, or service mismatches.
+	        throw new PersistentDataStoreException(e);
+	      }
+	    }
+	    return hashtags;
+  }
+  
   /** Write a User object to the Datastore service. */
   public void writeThrough(User user) {
     Entity userEntity = new Entity("chat-users", user.getId().toString());
@@ -245,5 +264,17 @@ public class PersistentDataStore {
     hashtagEntity.setProperty("user_source", hashtag.getUserSource());
     hashtagEntity.setProperty("conv_source", hashtag.getConversationSource());
     datastore.put(hashtagEntity);
+  }
+
+  /** Write an Activity object to the Datastore service. */
+  public void writeThrough(Activity activity) {
+    Entity activityEntity = new Entity("chat-activities", activity.getId().toString());
+    activityEntity.setProperty("uuid", activity.getId().toString());
+    activityEntity.setProperty("owner_uuid", activity.getOwnerId().toString());
+    activityEntity.setProperty("action", activity.getAction().name());
+    activityEntity.setProperty("isPublic", String.valueOf(activity.isPublic()));
+    activityEntity.setProperty("creation_time", activity.getCreationTime().toString());
+    activityEntity.setProperty("thumbnail", activity.getThumbnail().toString());
+    datastore.put(activityEntity);
   }
 }

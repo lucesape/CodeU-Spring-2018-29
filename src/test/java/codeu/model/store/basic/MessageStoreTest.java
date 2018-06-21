@@ -50,6 +50,20 @@ public class MessageStoreTest {
   }
 
   @Test
+  public void testGetMessageByUd() {
+    Message message1 = new TestMessageBuilder().withConversationId(CONVERSATION_ID_ONE).build();
+    Message message2 = new TestMessageBuilder().withId(UUID.fromString("20000000-2222-3333-4444-555555555555")).build();
+    Message message3 = new TestMessageBuilder().withConversationId(CONVERSATION_ID_ONE).build();
+    messageStore.setMessages(Arrays.asList(message1, message2, message3));
+
+    Message resultMessage = messageStore.getMessageById(UUID.fromString("20000000-2222-3333-4444-555555555555"));
+
+    assertMessageEquals(message2, resultMessage);
+
+  }
+
+
+  @Test
   public void testGetMessagesInConversation_noMessagesFound() {
     Message message1 = new TestMessageBuilder().build();
     Message message2 = new TestMessageBuilder().build();

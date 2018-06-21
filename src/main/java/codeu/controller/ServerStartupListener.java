@@ -1,15 +1,18 @@
 package codeu.controller;
 
+import codeu.model.data.Activity;
 import codeu.model.data.Conversation;
 import codeu.model.data.Hashtag;
 import codeu.model.data.Message;
 import codeu.model.data.User;
+import codeu.model.store.basic.ActivityStore;
 import codeu.model.store.basic.ConversationStore;
 import codeu.model.store.basic.HashtagStore;
 import codeu.model.store.basic.MessageStore;
 import codeu.model.store.basic.UserStore;
 import codeu.model.store.persistence.PersistentDataStoreException;
 import codeu.model.store.persistence.PersistentStorageAgent;
+
 import java.util.HashMap;
 import java.util.List;
 import javax.servlet.ServletContextEvent;
@@ -34,6 +37,9 @@ public class ServerStartupListener implements ServletContextListener {
       List<Message> messages = PersistentStorageAgent.getInstance().loadMessages();
       MessageStore.getInstance().setMessages(messages);
 
+      List<Activity> activities = PersistentStorageAgent.getInstance().loadActivities();
+      ActivityStore.getInstance().setActivities(activities);
+      
       HashMap<String, Hashtag> hashtags = PersistentStorageAgent.getInstance().loadHashtags();
       HashtagStore.getInstance().setHashtags(hashtags);
 

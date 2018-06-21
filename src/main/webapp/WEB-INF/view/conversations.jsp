@@ -61,6 +61,23 @@ List<Conversation> conversations = (List<Conversation>) request.getAttribute("co
       </ul>
     <% } %>
     <hr/>
+    
+    <h1>Hashtag Conversations</h1>
+    <% if (conversations == null || conversations.isEmpty()) { %>
+      <p>Create a Hashtag conversation to get started.</p>
+    <% } else { %>
+      <ul class="mdl-list">
+        <% for (Conversation conversation : conversations) { %>
+        <% if (conversation.getTitle().toLowerCase().contains("hashtag")){ %>
+        	<li><a href="/chat/<%= conversation.getTitle() %>">
+              <%= conversation.getTitle() %></a></li>
+        <% } %>
+          
+        <% } %>
+      </ul>
+    <% } %>
+    
+    
   </div>
 </body>
 </html>

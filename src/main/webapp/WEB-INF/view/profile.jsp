@@ -13,20 +13,21 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 --%>
-<%@ page import="codeu.model.data.User" %>
 <%@ page import="java.util.List" %>
-<%@ page import="codeu.model.data.Conversation" %>
+<%@ page import="java.time.Instant" %>
+<%@ page import="codeu.model.data.User" %>
 <%@ page import="codeu.model.data.Message" %>
+<%@ page import="codeu.model.data.Conversation" %>
 <%@ page import="codeu.model.store.basic.UserStore" %>
 <%@ page import="codeu.model.store.basic.MessageStore" %>
 <%@ page import="codeu.model.data.StyleText" %>
 <%@ page import="codeu.model.util.Util" %>
-<%@ page import="java.time.Instant" %>
 
 <%
-User user = (User) request.getAttribute("user");
-String profile_owner = (String) request.getAttribute("profile_owner");
+User activeUser = (User) request.getAttribute("user");
+String profileOwner = (String) request.getAttribute("profileOwner");
 List<Message> messagesByUser = (List<Message>) request.getAttribute("messagesByUser");
+List<User> users = (List<User>) request.getAttribute("users");
 %>
 
 <!DOCTYPE html>
@@ -62,16 +63,16 @@ List<Message> messagesByUser = (List<Message>) request.getAttribute("messagesByU
 
     <% if (request.getSession().getAttribute("user") != null) { %>
 
-      <h1><%=profile_owner%>'s Profile Page</h1>
+      <h1><%=profileOwner%>'s Profile Page</h1>
       <hr/>
-      <strong>About <%=profile_owner%></strong><br>
-      <p><%=StyleText.style(user.getAboutMe())%></p>
+      <strong>About <%=profileOwner%></strong><br>
+      <p><%=StyleText.style(activeUser.getAboutMe())%></p>
 
       <!--
           Only show the editable fields if the logged in user is the
           owner of this profile.
       -->
-      <% if (request.getSession().getAttribute("user").equals(profile_owner)) { %>
+      <% if (request.getSession().getAttribute("user").equals(profileOwner)) { %>
         <form action="/users/<%=request.getSession().getAttribute("user") %>" method="POST">
           <div class="form-group">
             <label class="form-control-label">Edit Your About Me (Only you can see this):</label>
@@ -82,7 +83,7 @@ List<Message> messagesByUser = (List<Message>) request.getAttribute("messagesByU
         <hr/>
       <% } %>
 
-      <h1><%=profile_owner%>'s Sent Messages</h1>
+      <h1><%=profileOwner%>'s Sent Messages</h1>
       <div id="chat">
         <ul>
           <% for (Message message : messagesByUser) {
@@ -95,6 +96,16 @@ List<Message> messagesByUser = (List<Message>) request.getAttribute("messagesByU
       </div>
       <hr/>
     <% } %>
+
+    <h1>Profile pages with "hashtag"</h1>
+    <ul>
+      <% for (User user: users) { %>
+        <% if (user.getAboutMe().toLowerCase().contains("hashtag")) { %>
+            <li><a href="/users/<%= user.getName() %>">
+            <%= user.getName() %>: <%= user.getAboutMe()%></a></li>
+        <% } %>
+      <% } %>
+    </ul>
   </div>
 </body>
 </html>

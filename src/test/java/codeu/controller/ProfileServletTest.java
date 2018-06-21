@@ -81,7 +81,7 @@ public class ProfileServletTest {
     profileServlet.doGet(mockRequest, mockResponse);
 
     Mockito.verify(mockRequest).setAttribute("messagesByUser", fakeMessagesByUser);
-    Mockito.verify(mockRequest).setAttribute("profile_owner", "test_user");
+    Mockito.verify(mockRequest).setAttribute("profileOwner", "test_user");
     Mockito.verify(mockRequest).setAttribute("user", fakeUser);
     Mockito.verify(mockRequestDispatcher).forward(mockRequest, mockResponse);
   }
