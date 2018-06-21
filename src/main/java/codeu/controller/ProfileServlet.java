@@ -19,8 +19,8 @@ import codeu.model.data.User;
 import codeu.model.store.basic.MessageStore;
 import codeu.model.store.basic.UserStore;
 import java.io.IOException;
-import java.util.UUID;
 import java.util.List;
+import java.util.UUID;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -69,9 +69,9 @@ public class ProfileServlet extends HttpServlet {
       throws IOException, ServletException {
 
     String requestUrl = request.getRequestURI();
-    String profile_owner = requestUrl.substring("/users/".length());
+    String profileOwner = requestUrl.substring("/users/".length());
 
-    User user = userStore.getUser(profile_owner);
+    User user = userStore.getUser(profileOwner);
     if (user == null) {
       // user is not logged in, redirect to login page
       response.sendRedirect("/login");
@@ -86,9 +86,11 @@ public class ProfileServlet extends HttpServlet {
     }
 
     List<Message> messagesByUser = messageStore.getMessagesByUser(userID);
+    List<User> users = userStore.getUsers();
 
+    request.setAttribute("users", users);
     request.setAttribute("messagesByUser", messagesByUser);
-    request.setAttribute("profile_owner", profile_owner);
+    request.setAttribute("profileOwner", profileOwner);
     request.setAttribute("user", user);
     request.getRequestDispatcher("/WEB-INF/view/profile.jsp").forward(request, response);
   }
@@ -117,7 +119,7 @@ public class ProfileServlet extends HttpServlet {
     }
 
     String aboutMeContent = request.getParameter("About Me");
-    
+
     // this removes any HTML from the content
     String cleanedAboutMeContent = Jsoup.clean(aboutMeContent, Whitelist.none());
 
