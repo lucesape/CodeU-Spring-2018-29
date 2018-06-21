@@ -55,7 +55,9 @@ public class ConversationStore {
    * @param persistentStorageAgent a mock used for testing
    */
   public static ConversationStore getTestInstance(PersistentStorageAgent persistentStorageAgent) {
-    return new ConversationStore(persistentStorageAgent);
+    instance = new ConversationStore(persistentStorageAgent);
+    instance.setActivityStore(ActivityStore.getTestInstance(persistentStorageAgent));
+    return instance;
   }
 
   /**
@@ -70,6 +72,7 @@ public class ConversationStore {
   /** This class is a singleton, so its constructor is private. Call getInstance() instead. */
   private ConversationStore(PersistentStorageAgent persistentStorageAgent) {
     this.persistentStorageAgent = persistentStorageAgent;
+    this.setActivityStore(ActivityStore.getTestInstance(persistentStorageAgent));
     conversations = new ArrayList<>();
   }
 
@@ -84,9 +87,7 @@ public class ConversationStore {
     persistentStorageAgent.writeThrough(conversation);
     Activity activity1 = new Activity(conversation);
     activity1.setIsPublic(true);
-    if (activityStore != null) {
-      activityStore.addActivity(activity1);
-    }
+    activityStore.addActivity(activity1);
   }
 
   /** Check whether a Conversation title is already known to the application. */

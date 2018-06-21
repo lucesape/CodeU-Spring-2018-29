@@ -164,13 +164,13 @@ public class PersistentDataStore {
     for (Entity entity : results.asIterable()) {
       try {
         UUID uuid = UUID.fromString((String) entity.getProperty("uuid"));
-        UUID uuid_owner = UUID.fromString((String) entity.getProperty("owner_uuid"));
+        UUID uuidOwner = UUID.fromString((String) entity.getProperty("owner_uuid"));
         Action action = Action.valueOf((String) entity.getProperty("action"));
         Boolean isPublic = Boolean.valueOf((String) entity.getProperty("isPublic"));
         Instant creationTime = Instant.parse((String) entity.getProperty("creation_time"));
         String thumbnail = (String) entity.getProperty("thumbnail");
         Activity activity =
-                new Activity(uuid, uuid_owner, action, isPublic, creationTime, thumbnail);
+                new Activity(uuid, uuidOwner, action, isPublic, creationTime, thumbnail);
         activities.add(activity);
       } catch (Exception e) {
         // In a production environment, errors should be very rare. Errors which may

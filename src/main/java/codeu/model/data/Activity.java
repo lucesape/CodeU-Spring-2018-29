@@ -13,7 +13,7 @@ public class Activity {
   private final UUID id;
   private final UUID ownerId;
   private final Action action;
-  private Boolean isPublic;
+  private boolean isPublic;
   private final Instant creation;
   private final String thumbnail;
 
@@ -27,7 +27,7 @@ public class Activity {
    * @param creation the creation time of this Conversation
    * @param thumbnail a short summary about the activity
    */
-  public Activity(UUID id, UUID ownerId, Action action, Boolean isPublic, Instant creation, String thumbnail) {
+  public Activity(UUID id, UUID ownerId, Action action, boolean isPublic, Instant creation, String thumbnail) {
     this.id = id;
     this.action = action;
     this.ownerId = ownerId;

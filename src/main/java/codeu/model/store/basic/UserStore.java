@@ -57,7 +57,7 @@ public class UserStore {
    * @param persistentStorageAgent a mock used for testing
    */
   public static UserStore getTestInstance(PersistentStorageAgent persistentStorageAgent) {
-    return new UserStore(persistentStorageAgent);
+    return instance = new UserStore(persistentStorageAgent);
   }
 
   /**
@@ -71,8 +71,10 @@ public class UserStore {
   /** This class is a singleton, so its constructor is private. Call getInstance() instead. */
   private UserStore(PersistentStorageAgent persistentStorageAgent) {
     this.persistentStorageAgent = persistentStorageAgent;
+    // Todo: This should be inside getTestInstance() once we fixed line 79
+    this.setActivityStore(ActivityStore.getTestInstance(persistentStorageAgent));
     users = new ArrayList<>();
-
+    // Todo: We need to find a better way to add the initial admin
     // hard-coded initial Admin:
     this.addUser("Admin01", "AdminPass01", /*admin=*/ true);
   }
@@ -126,9 +128,7 @@ public class UserStore {
     persistentStorageAgent.writeThrough(user);
     Activity activity1 = new Activity(user);
     activity1.setIsPublic(true);
-    if (activityStore != null) {
-      activityStore.addActivity(activity1);
-    }
+    activityStore.addActivity(activity1);
   }
 
   /** Update an existing User. */

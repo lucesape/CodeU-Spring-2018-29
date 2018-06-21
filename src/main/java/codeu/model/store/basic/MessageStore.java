@@ -55,7 +55,9 @@ public class MessageStore {
    * @param persistentStorageAgent a mock used for testing
    */
   public static MessageStore getTestInstance(PersistentStorageAgent persistentStorageAgent) {
-    return new MessageStore(persistentStorageAgent);
+    instance = new MessageStore(persistentStorageAgent);
+    instance.setActivityStore(ActivityStore.getTestInstance(persistentStorageAgent));
+    return instance;
   }
 
   /**
@@ -79,9 +81,7 @@ public class MessageStore {
     persistentStorageAgent.writeThrough(message);
     Activity activity1 = new Activity(message);
     activity1.setIsPublic(true);
-    if (activityStore != null) {
-      activityStore.addActivity(activity1);
-    }
+    activityStore.addActivity(activity1);
   }
 
   /** Access the current set of Messages within the given Conversation. */

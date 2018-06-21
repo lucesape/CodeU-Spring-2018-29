@@ -65,16 +65,16 @@ public class ActivityStore {
 
   /** Find and return the activities with the given action. */
   public List<Activity> getActivitiesWithAction(Action action) {
-    List<Activity> activity_list = new ArrayList<>();
+    List<Activity> activityList = new ArrayList<>();
     for (Activity activity : activities) {
       if (activity.getAction() == action) {
-        activity_list.add(activity);
+        activityList.add(activity);
       }
     }
-    if (activity_list.size() == 0) {
+    if (activityList.isEmpty()) {
       return null;
     }
-    return activity_list;
+    return activityList;
   }
 
   /** Find and return the activity with the given id. */
