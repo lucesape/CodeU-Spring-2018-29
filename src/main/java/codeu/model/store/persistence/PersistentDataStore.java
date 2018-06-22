@@ -4,7 +4,7 @@
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-//    http://www.apache.org/licenses/LICENSE-2.0
+// http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -24,7 +24,11 @@ import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -48,8 +52,8 @@ public class PersistentDataStore {
   /**
    * Loads all User objects from the Datastore service and returns them in a List.
    *
-   * @throws PersistentDataStoreException if an error was detected during the load from the
-   *     Datastore service
+   * @throws codeu.model.store.persistence.PersistentDataStoreException if an error was detected
+   *         during the load from the Datastore service
    */
   public List<User> loadUsers() throws PersistentDataStoreException {
 
@@ -68,8 +72,10 @@ public class PersistentDataStore {
         User user = new User(uuid, userName, passwordHash, creationTime);
         users.add(user);
       } catch (Exception e) {
-        // In a production environment, errors should be very rare. Errors which may
-        // occur include network errors, Datastore service errors, authorization errors,
+        // In a production environment, errors should be very rare.
+        // Errors which may
+        // occur include network errors, Datastore service errors,
+        // authorization errors,
         // database entity definition mismatches, or service mismatches.
         throw new PersistentDataStoreException(e);
       }
@@ -82,8 +88,8 @@ public class PersistentDataStore {
    * Loads all Conversation objects from the Datastore service and returns them in a List, sorted in
    * ascending order by creation time.
    *
-   * @throws PersistentDataStoreException if an error was detected during the load from the
-   *     Datastore service
+   * @throws codeu.model.store.persistence.PersistentDataStoreException if an error was detected
+   *         during the load from the Datastore service
    */
   public List<Conversation> loadConversations() throws PersistentDataStoreException {
 
@@ -102,8 +108,10 @@ public class PersistentDataStore {
         Conversation conversation = new Conversation(uuid, ownerUuid, title, creationTime);
         conversations.add(conversation);
       } catch (Exception e) {
-        // In a production environment, errors should be very rare. Errors which may
-        // occur include network errors, Datastore service errors, authorization errors,
+        // In a production environment, errors should be very rare.
+        // Errors which may
+        // occur include network errors, Datastore service errors,
+        // authorization errors,
         // database entity definition mismatches, or service mismatches.
         throw new PersistentDataStoreException(e);
       }
@@ -116,8 +124,8 @@ public class PersistentDataStore {
    * Loads all Message objects from the Datastore service and returns them in a List, sorted in
    * ascending order by creation time.
    *
-   * @throws PersistentDataStoreException if an error was detected during the load from the
-   *     Datastore service
+   * @throws codeu.model.store.persistence.PersistentDataStoreException if an error was detected
+   *         during the load from the Datastore service
    */
   public List<Message> loadMessages() throws PersistentDataStoreException {
 
@@ -137,8 +145,10 @@ public class PersistentDataStore {
         Message message = new Message(uuid, conversationUuid, authorUuid, content, creationTime);
         messages.add(message);
       } catch (Exception e) {
-        // In a production environment, errors should be very rare. Errors which may
-        // occur include network errors, Datastore service errors, authorization errors,
+        // In a production environment, errors should be very rare.
+        // Errors which may
+        // occur include network errors, Datastore service errors,
+        // authorization errors,
         // database entity definition mismatches, or service mismatches.
         throw new PersistentDataStoreException(e);
       }
@@ -151,7 +161,7 @@ public class PersistentDataStore {
    * Loads all Activity objects from the Datastore service and returns them in a List.
    *
    * @throws codeu.model.store.persistence.PersistentDataStoreException if an error was detected
-   *     during the load from the Datastore service
+   *         during the load from the Datastore service
    */
   public List<Activity> loadActivities() throws PersistentDataStoreException {
 
@@ -170,7 +180,7 @@ public class PersistentDataStore {
         Instant creationTime = Instant.parse((String) entity.getProperty("creation_time"));
         String thumbnail = (String) entity.getProperty("thumbnail");
         Activity activity =
-                new Activity(uuid, uuidOwner, action, isPublic, creationTime, thumbnail);
+            new Activity(uuid, uuidOwner, action, isPublic, creationTime, thumbnail);
         activities.add(activity);
       } catch (Exception e) {
         // In a production environment, errors should be very rare. Errors which may
@@ -181,6 +191,36 @@ public class PersistentDataStore {
     }
 
     return activities;
+  }
+
+  public HashMap<String, Hashtag> loadHashtags() throws PersistentDataStoreException {
+
+    HashMap<String, Hashtag> hashtags = new HashMap<String, Hashtag>();
+    // Retrieve all hashtags from the datastore.
+    Query query = new Query("chat-hashtags").addSort("creation_time", SortDirection.ASCENDING);
+    PreparedQuery results = datastore.prepare(query);
+
+    for (Entity entity : results.asIterable()) {
+      try {
+        String content = (String) entity.getProperty("content");
+        UUID uuid = UUID.fromString((String) entity.getProperty("uuid"));
+        Instant creationTime = Instant.parse((String) entity.getProperty("creation_time"));
+        Set<String> userSource = new HashSet<String>(
+            Arrays.asList(((String) (entity.getProperty("user_source"))).split(",")));
+        Set<String> convSource = new HashSet<String>(
+            Arrays.asList(((String) (entity.getProperty("conv_source"))).split(",")));
+        Hashtag hashtag = new Hashtag(uuid, content, creationTime, userSource, convSource);
+        hashtags.put(content.toLowerCase(), hashtag);
+      } catch (Exception e) {
+        // In a production environment, errors should be very rare.
+        // Errors which may
+        // occur include network errors, Datastore service errors,
+        // authorization errors,
+        // database entity definition mismatches, or service mismatches.
+        throw new PersistentDataStoreException(e);
+      }
+    }
+    return hashtags;
   }
 
   /** Write a User object to the Datastore service. */
@@ -213,6 +253,17 @@ public class PersistentDataStore {
     conversationEntity.setProperty("title", conversation.getTitle());
     conversationEntity.setProperty("creation_time", conversation.getCreationTime().toString());
     datastore.put(conversationEntity);
+  }
+
+  /** Write a Hashtag object to the Datastore service. */
+  public void writeThrough(Hashtag hashtag) {
+    Entity hashtagEntity = new Entity("chat-hashtags", hashtag.getId().toString());
+    hashtagEntity.setProperty("uuid", hashtag.getId().toString());
+    hashtagEntity.setProperty("content", hashtag.getContent());
+    hashtagEntity.setProperty("creation_time", hashtag.getCreationTime().toString());
+    hashtagEntity.setProperty("user_source", hashtag.getUserSource());
+    hashtagEntity.setProperty("conv_source", hashtag.getConversationSource());
+    datastore.put(hashtagEntity);
   }
 
   /** Write an Activity object to the Datastore service. */
