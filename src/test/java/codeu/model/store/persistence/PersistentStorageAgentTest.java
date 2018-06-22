@@ -1,8 +1,8 @@
 package codeu.model.store.persistence;
 
 import codeu.model.data.*;
-
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.UUID;
 import org.junit.Before;
 import org.junit.Test;
@@ -44,6 +44,11 @@ public class PersistentStorageAgentTest {
   }
 
   @Test
+  public void testLoadHashtags() throws PersistentDataStoreException {
+    persistentStorageAgent.loadHashtags();
+    Mockito.verify(mockPersistentDataStore).loadHashtags();
+  }
+
   public void testLoadActivities() throws PersistentDataStoreException {
     persistentStorageAgent.loadActivities();
     Mockito.verify(mockPersistentDataStore).loadActivities();
@@ -79,10 +84,28 @@ public class PersistentStorageAgentTest {
   }
 
   @Test
+  public void testWriteThroughHashtag() {
+    Hashtag hashtag =
+        new Hashtag(
+            UUID.randomUUID(),
+            "soccer",
+            Instant.now(),
+            new HashSet<String>(),
+            new HashSet<String>());
+    persistentStorageAgent.writeThrough(hashtag);
+    Mockito.verify(mockPersistentDataStore).writeThrough(hashtag);
+  }
+
   public void testWriteThroughActivity() {
     Activity activity =
-            new Activity(
-                    UUID.randomUUID(), UUID.randomUUID(), Action.REGISTER_USER,  /** isPublic = */ true, Instant.now(), null);
+        new Activity(
+            UUID.randomUUID(),
+            UUID.randomUUID(),
+            Action.REGISTER_USER,
+            /** isPublic = */
+            true,
+            Instant.now(),
+            null);
     persistentStorageAgent.writeThrough(activity);
     Mockito.verify(mockPersistentDataStore).writeThrough(activity);
   }

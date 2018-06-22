@@ -4,7 +4,7 @@
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-//    http://www.apache.org/licenses/LICENSE-2.0
+// http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -19,7 +19,9 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 import java.util.UUID;
 
 public class ModelDataTestHelpers {
@@ -66,6 +68,20 @@ public class ModelDataTestHelpers {
     }
   }
 
+  /** Asserts that all fields on both Hashtags are the same. */
+  public static void assertHashtagEquals(Hashtag expected, Hashtag actual) {
+    if (expected == null) {
+      assertNull(actual);
+    } else {
+      assertNotNull("Hashtag not found", actual);
+      assertEquals(expected.getId(), actual.getId());
+      assertEquals(expected.getCreationTime(), actual.getCreationTime());
+      assertEquals(expected.getContent(), actual.getContent());
+      assertEquals(expected.getConversationSource(), actual.getConversationSource());
+      assertEquals(expected.getUserSource(), actual.getUserSource());
+    }
+  }
+
   /** Asserts that all fields on both Activities are the same. */
   public static void assertActivityEquals(Activity expected, Activity actual) {
     if (expected == null) {
@@ -79,7 +95,6 @@ public class ModelDataTestHelpers {
       assertEquals(expected.isPublic(), actual.isPublic());
       assertEquals(expected.getCreationTime(), actual.getCreationTime());
       assertEquals(expected.getThumbnail(), actual.getThumbnail());
-
     }
   }
 
@@ -88,11 +103,15 @@ public class ModelDataTestHelpers {
    * data in every field, and the individual methods can be used to set the test conditions. For
    * example, if the test needs specific owner ID and title, then you could do:
    *
-   * <pre>{@code
-   * UUID fakeOwner = UUID.randomUUID();
-   * String fakeTitle = "test title 1";
-   * Conversation fakeConversation = new TestConversationBuilder().withOwnerId(fakeOwner).withTitle(fakeTitle).build();
-   * }</pre>
+   * <pre>
+   * {
+   *   &#64;code
+   *   UUID fakeOwner = UUID.randomUUID();
+   *   String fakeTitle = "test title 1";
+   *   Conversation fakeConversation =
+   *       new TestConversationBuilder().withOwnerId(fakeOwner).withTitle(fakeTitle).build();
+   * }
+   * </pre>
    */
   public static class TestConversationBuilder {
     private UUID id;
@@ -137,11 +156,15 @@ public class ModelDataTestHelpers {
    * in every field, and the individual methods can be used to set the test conditions. For example,
    * if the test needs specific author ID and content, then you could do:
    *
-   * <pre>{@code
-   * UUID fakeAuthor = UUID.randomUUID();
-   * String fakeContent = "test message 1";
-   * Message fakeMessage = new TestMessageBuilder().withAuthorId(fakeAuthor).withContent(fakeContent).build();
-   * }</pre>
+   * <pre>
+   * {
+   *   &#64;code
+   *   UUID fakeAuthor = UUID.randomUUID();
+   *   String fakeContent = "test message 1";
+   *   Message fakeMessage =
+   *       new TestMessageBuilder().withAuthorId(fakeAuthor).withContent(fakeContent).build();
+   * }
+   * </pre>
    */
   public static class TestMessageBuilder {
     private UUID id;
@@ -193,10 +216,13 @@ public class ModelDataTestHelpers {
    * every field, and the individual methods can be used to set the test conditions. For example, if
    * the test needs specific name, then you could do:
    *
-   * <pre>{@code
-   * String fakeName = "Alex Smith";
-   * User fakeUser = new TestUserBuilder().withName(fakeName).build();
-   * }</pre>
+   * <pre>
+   * {
+   *   &#64;code
+   *   String fakeName = "Alex Smith";
+   *   User fakeUser = new TestUserBuilder().withName(fakeName).build();
+   * }
+   * </pre>
    */
   public static class TestUserBuilder {
     private UUID id;
@@ -254,17 +280,79 @@ public class ModelDataTestHelpers {
       return user;
     }
   }
-  
+
+  /**
+   * Use this to create a fake Hashtag to use in a unit test. When created it contains random data
+   * in every field, and the individual methods can be used to set the test conditions. For example,
+   * if the test needs specific owner ID and title, then you could do:
+   *
+   * <pre>
+   * {
+   *   &#64;code
+   *   String fakeContent = "test content 1";
+   *   Hashtag fakeHashtag = new TestHashtagBuilder().withContent(fakeContent).build();
+   * }
+   * </pre>
+   */
+  public static class TestHashtagBuilder {
+    private UUID id;
+    private String content;
+    private Instant creationTime;
+    private Set<String> userSource;
+    private Set<String> conversationSource;
+
+    public TestHashtagBuilder() {
+      this.id = UUID.randomUUID();
+      this.content = UUID.randomUUID().toString();
+      this.creationTime = Instant.now();
+      this.userSource = new HashSet<>();
+      this.conversationSource = new HashSet<>();
+    }
+
+    public TestHashtagBuilder withId(UUID id) {
+      this.id = id;
+      return this;
+    }
+
+    public TestHashtagBuilder withContent(String content) {
+      this.content = content;
+      return this;
+    }
+
+    public TestHashtagBuilder withCreationTime(Instant creationTime) {
+      this.creationTime = creationTime;
+      return this;
+    }
+
+    public TestHashtagBuilder withUserSource(Set<String> userSource) {
+      this.userSource = userSource;
+      return this;
+    }
+
+    public TestHashtagBuilder withConversationSource(Set<String> conversationSource) {
+      this.conversationSource = conversationSource;
+      return this;
+    }
+
+    public Hashtag build() {
+      return new Hashtag(id, content, creationTime, userSource, conversationSource);
+    }
+  }
+
   /**
    * Use this to create a fake Activity to use in a unit test. When created it contains random data
    * in every field, and the individual methods can be used to set the test conditions. For example,
    * if the test needs specific name, then you could do:
    *
-   * <pre>{@code
-   * UUID fakeOwner = UUID.randomUUID();
-   * boolean isPublic = true;
-   * Activity fakeActivity = new TestActivityBuilder().withOwnerId(fakeOwner).withIsPublic(isPublic).build();
-   * }</pre>
+   * <pre>
+   * {
+   *   &#64;code
+   *   UUID fakeOwner = UUID.randomUUID();
+   *   boolean isPublic = true;
+   *   Activity fakeActivity =
+   *       new TestActivityBuilder().withOwnerId(fakeOwner).withIsPublic(isPublic).build();
+   * }
+   * </pre>
    */
   public static class TestActivityBuilder {
     private UUID id;
@@ -273,7 +361,7 @@ public class ModelDataTestHelpers {
     private boolean isPublic;
     private Instant creationTime;
     private String thumbnail;
-    
+
     private Random random = new Random();
 
     public TestActivityBuilder() {
@@ -315,11 +403,10 @@ public class ModelDataTestHelpers {
       this.thumbnail = thumbnail;
       return this;
     }
-    
+
     public Activity build() {
       Activity activity = new Activity(id, ownerId, action, isPublic, creationTime, thumbnail);
       return activity;
     }
   }
 }
-

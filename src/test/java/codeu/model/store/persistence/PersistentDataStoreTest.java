@@ -1,11 +1,15 @@
 package codeu.model.store.persistence;
 
-import codeu.model.data.*;
 import static codeu.model.data.ModelDataTestHelpers.assertActivityEquals;
+
+import codeu.model.data.*;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import java.time.Instant;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import org.junit.After;
 import org.junit.Assert;
@@ -147,6 +151,38 @@ public class PersistentDataStoreTest {
   }
 
   @Test
+  public void testSaveAndLoadHashtags() throws PersistentDataStoreException {
+    UUID idOne = UUID.fromString("10000000-2222-3333-4444-555555555555");
+    String content1 = "soccer";
+    Instant creationOne = Instant.ofEpochMilli(1000);
+    Set<String> userSource = new HashSet<>();
+    Set<String> convSource = new HashSet<>();
+    Hashtag inputHashOne = new Hashtag(idOne, content1, creationOne, userSource, convSource);
+
+    UUID idTwo = UUID.fromString("20000000-2222-3333-4444-555555555555");
+    String content2 = "football";
+    Instant creationTwo = Instant.ofEpochMilli(1000);
+    Hashtag inputHashTwo = new Hashtag(idTwo, content2, creationTwo, userSource, convSource);
+
+    // save
+    persistentDataStore.writeThrough(inputHashOne);
+    persistentDataStore.writeThrough(inputHashTwo);
+
+    // load
+    HashMap<String, Hashtag> resultHashtags = persistentDataStore.loadHashtags();
+
+    // confirm that what we saved matches what we loaded
+    Hashtag resultHastagOne = resultHashtags.get(content1);
+    Assert.assertEquals(idOne, resultHastagOne.getId());
+    Assert.assertEquals(content1, resultHastagOne.getContent());
+    Assert.assertEquals(creationOne, resultHastagOne.getCreationTime());
+
+    Hashtag resultHastagtwo = resultHashtags.get(content2);
+    Assert.assertEquals(idTwo, resultHastagtwo.getId());
+    Assert.assertEquals(content2, resultHastagtwo.getContent());
+    Assert.assertEquals(creationTwo, resultHastagtwo.getCreationTime());
+  }
+
   public void testSaveAndLoadActivities() throws PersistentDataStoreException {
     UUID idOne = UUID.fromString("10000000-2222-3333-4444-555555555555");
     UUID idOwner = UUID.fromString("10000001-2222-3333-4444-555555555555");
@@ -154,7 +190,7 @@ public class PersistentDataStoreTest {
     Instant creationOne = Instant.ofEpochMilli(1000);
     String thumbnail1 = "test content one";
     Activity inputActivityOne =
-            new Activity(idOne, idOwner, action1, true, creationOne, thumbnail1);
+        new Activity(idOne, idOwner, action1, true, creationOne, thumbnail1);
 
     UUID idTwo = UUID.fromString("20000000-2222-3333-4444-555555555555");
     UUID idOwnerTwo = UUID.fromString("20000001-2222-3333-4444-555555555555");
@@ -162,7 +198,7 @@ public class PersistentDataStoreTest {
     Instant creationTwo = Instant.ofEpochMilli(1000);
     String thumbnail2 = "test content two";
     Activity inputActivityTwo =
-            new Activity(idTwo, idOwnerTwo, action2, true, creationTwo, thumbnail2);
+        new Activity(idTwo, idOwnerTwo, action2, true, creationTwo, thumbnail2);
 
     // save
     persistentDataStore.writeThrough(inputActivityOne);
