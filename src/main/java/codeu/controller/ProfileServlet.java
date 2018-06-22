@@ -47,11 +47,7 @@ public class ProfileServlet extends HttpServlet {
     super.init();
     setUserStore(UserStore.getInstance());
     setMessageStore(MessageStore.getInstance());
-<<<<<<< HEAD
     setHashtagStore(HashtagStore.getInstance());
-=======
-    setHashtagStore(HashtagStore.getInstance())
->>>>>>> bdc4aca41146be6fc030791ecaafd5ccca8bf0e0
   }
 
   /**
