@@ -16,7 +16,9 @@ package codeu.controller;
 
 import codeu.model.data.Message;
 import codeu.model.data.User;
+import codeu.model.data.Hashtag;
 import codeu.model.store.basic.MessageStore;
+import codeu.model.store.basic.HashtagStore;
 import codeu.model.store.basic.UserStore;
 import java.io.IOException;
 import java.util.List;
@@ -36,12 +38,16 @@ public class ProfileServlet extends HttpServlet {
   /** Store class that gives access to Messages. */
   private MessageStore messageStore;
 
+  /** Store class that gives access to Hashtags. */
+  private HashtagStore hashtagStore;
+
   /** Set up state for handling user requests. */
   @Override
   public void init() throws ServletException {
     super.init();
     setUserStore(UserStore.getInstance());
     setMessageStore(MessageStore.getInstance());
+    setHashtagStore(HashtagStore.getInstance());
   }
 
   /**
@@ -58,6 +64,10 @@ public class ProfileServlet extends HttpServlet {
    */
   void setMessageStore(MessageStore messageStore) {
     this.messageStore = messageStore;
+  }
+
+  void setHashtagStore(HashtagStore hashtagStore) {
+    this.hashtagStore = hashtagStore;
   }
 
   /**
@@ -89,6 +99,7 @@ public class ProfileServlet extends HttpServlet {
     List<User> users = userStore.getUsers();
 
     request.setAttribute("users", users);
+    //request.setAttribute("hashtags", hashtags);
     request.setAttribute("messagesByUser", messagesByUser);
     request.setAttribute("profileOwner", profileOwner);
     request.setAttribute("user", user);
