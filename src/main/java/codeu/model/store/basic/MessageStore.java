@@ -75,6 +75,12 @@ public class MessageStore {
     messages = new ArrayList<>();
   }
 
+  /** Delete an existing message from the current set of messages known to the application. */
+  public void deleteMessage(Message message) {
+    messages.remove(message);
+    persistentStorageAgent.deleteFrom(message);
+  }
+
   /** Add a new message to the current set of messages known to the application. */
   public void addMessage(Message message) {
     messages.add(message);
