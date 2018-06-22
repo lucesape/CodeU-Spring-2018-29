@@ -68,6 +68,7 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
                   if (author == authorLogin) {
                     if(confirm("Are you sure you want to delete this message")){
                       $(this).fadeOut("slow");
+
                     }
                   }
                 }  
