@@ -67,7 +67,6 @@ public class HashtagStore {
    * <p>Precondition: content should not contain any symbols, the case of the content does not
    * matter.
    */
-  // public void addHashtag(String content, HashtagCreator creator, UUID id) {
   public void addHashtag(Hashtag hashtag, HashtagCreator creator, UUID id) {
     String content = hashtag.getContent().toLowerCase();
     // If the content already exist in the map; overwrite the parameter
