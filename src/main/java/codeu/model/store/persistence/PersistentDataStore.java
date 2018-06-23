@@ -156,7 +156,7 @@ public class PersistentDataStore {
    * Loads all Activity objects from the Datastore service and returns them in a List.
    *
    * @throws codeu.model.store.persistence.PersistentDataStoreException if an error was detected
-   *     during the load from the Datastore service
+   *         during the load from the Datastore service
    */
   public List<Activity> loadActivities() throws PersistentDataStoreException {
 
